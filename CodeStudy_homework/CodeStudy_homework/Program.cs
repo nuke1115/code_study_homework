@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace HomeworkGame
 {
     public class MainProgram
@@ -9,7 +8,7 @@ namespace HomeworkGame
         {
             MainProgram program = new MainProgram();
 
-            if(program.InitGameProgram() == false)
+            if (program.InitGameProgram() == false)
             {
                 Console.WriteLine("게임 초기화 실패");
                 return;
@@ -180,6 +179,7 @@ namespace HomeworkGame
 
 게임 상태:
 초기화면
+정보 출력중
 유닛 선택중
 행동 선택중
 대상 선택중
