@@ -5,18 +5,21 @@ namespace HomeworkGame.GameStatus
     {
         private eGameStatus _gameStatus = eGameStatus.INITIAL_SCREEN;
         private int[] _selectedTargets;
+        private int _maxMonsterNum;
         private int _turns = 0;
 
 
         public GameContext(int maxTargetNums)
         {
             _selectedTargets = new int[maxTargetNums];
+            _maxMonsterNum = maxTargetNums;
             _turns = 0;
         }
 
         public void ResetContext(int maxTargetNums)
         {
             _selectedTargets = new int[maxTargetNums];
+            _maxMonsterNum = maxTargetNums;
             _turns = 0;
             _gameStatus = eGameStatus.INITIAL_SCREEN;
         }
@@ -29,6 +32,10 @@ namespace HomeworkGame.GameStatus
             }
         }
 
+        public int GetMaxMonsterNum
+        {
+            get { return _maxMonsterNum; }
+        }
         public void MoveNextTurn()
         {
             _turns++;
