@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeStudy_homework_1.Characters
+namespace HomeworkGame.Characters
 {
     public enum eMonsterTypes
     {
