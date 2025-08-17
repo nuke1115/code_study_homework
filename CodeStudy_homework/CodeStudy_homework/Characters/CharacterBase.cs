@@ -8,9 +8,9 @@ namespace HomeworkGame.Characters
 {
     public abstract class CharacterBase
     {
-        private string _name;
+        protected string _name;
         private int _hp;
-        private int _power;
+        protected int _power;
         private bool _isDefense;
         private bool _isDead;
 
