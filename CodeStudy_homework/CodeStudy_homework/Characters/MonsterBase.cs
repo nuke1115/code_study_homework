@@ -9,7 +9,7 @@ namespace HomeworkGame.Characters
 {
     public abstract class MonsterBase : CharacterBase
     {
-        private eMonsterTypes _type;
+        protected eMonsterTypes _type;
         public MonsterBase(string name, int hp, int power) : base(name, hp, power){ }
 
         public eMonsterTypes GetMonsterType

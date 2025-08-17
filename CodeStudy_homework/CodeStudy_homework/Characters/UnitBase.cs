@@ -10,9 +10,9 @@ namespace HomeworkGame.Characters
     public abstract class UnitBase : CharacterBase
     {
 
-        private int _attackCount;
-        private int _killCount;
-        private eUnitTypes _type;
+        protected int _attackCount;
+        protected int _killCount;
+        protected eUnitTypes _type;
 
         public UnitBase(string name, int hp, int power) : base(name, hp, power)
         {
