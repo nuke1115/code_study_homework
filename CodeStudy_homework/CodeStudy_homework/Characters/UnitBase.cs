@@ -20,6 +20,10 @@ namespace HomeworkGame.Characters
             _killCount = 0;
         }
 
+        public virtual void ShowSelectMessage()
+        {
+            Console.WriteLine("공격할 대상의 번호를 입력하세요. : ");
+        }
 
         public int GetAttackCount
         {

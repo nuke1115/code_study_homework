@@ -34,6 +34,7 @@ namespace HomeworkGame.PlayerUnit
             }
 
             _selectedUnit = _units[index];
+            _selectedUnit.ShowSelectMessage();
             return true;
         }
 
