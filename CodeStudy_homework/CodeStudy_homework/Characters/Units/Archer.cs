@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace HomeworkGame.Characters.Units
 {
@@ -15,17 +11,31 @@ namespace HomeworkGame.Characters.Units
             _type = eUnitTypes.ARCHER;
         }
 
-        public override void Attack(List<CharacterBase> targets)
+        public override void ShowSelectMessage()
         {
-            _attackCount++;
-            if (targets[0].IsDefense)
+            Console.WriteLine("궁수 : 대상의 방어를 뚫고 공격 가능하다.");
+            base.ShowSelectMessage();
+        }
+
+        protected override void Attack(List<MonsterBase>? targets)
+        {
+            if(targets is null)
             {
-                Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {targets[0].GetType()} 인 {targets[0].GetName}의 견고한 방어를 뚫었다.");
+                return;
+            }
+            MonsterBase selectedMonster = targets[0];
+
+            _attackCount++;
+
+            if (selectedMonster.IsDefense)
+            {
+                Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {selectedMonster.GetName}의 견고한 방어를 뚫었다.");
+                selectedMonster.SetDefense(false);
             }
 
-            targets[0].TakeDamage(_power);
+            selectedMonster.TakeDamage(_power);
 
-            if (targets[0].IsDead)
+            if (selectedMonster.IsDead)
             {
                 _killCount++;
             }

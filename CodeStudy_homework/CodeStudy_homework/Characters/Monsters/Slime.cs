@@ -1,10 +1,4 @@
-﻿using HomeworkGame.Characters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using HomeworkGame.Players.Player;
 
 namespace HomeworkGame.Characters.Monsters
 {
@@ -15,18 +9,35 @@ namespace HomeworkGame.Characters.Monsters
             _type = eMonsterTypes.SLIME;
         }
 
-        public override void Attack(List<CharacterBase> targets)
+        protected override void Attack(List<UnitBase>? targets)
         {
-            foreach (CharacterBase target in targets)
+            if(targets is null)
             {
-                if (target.IsDefense)
+                return;
+            }
+            
+            foreach(UnitBase selectedTarget in targets)
+            {
+                if(selectedTarget.IsDead)
                 {
-                    Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {target.GetType()} 인 {target.GetName} 를 공격하려 했으나 방어에 막혔다.");
-                    return;
+                    continue;
                 }
 
-                target.TakeDamage(_power);
+                if (selectedTarget.IsDefense)
+                {
+                    Console.WriteLine($"{_type.ToString()} 인 {_name} 가  {selectedTarget.GetName} 를 공격하려 했으나 방어에 막혔다.");
+                    selectedTarget.SetDefense(false);
+                    continue;
+                }
+
+                selectedTarget.TakeDamage(_power);
             }
+
+        }
+
+        protected override List<UnitBase>? SelectTarget(Player player)
+        {
+            return player.GetCharacterList();
         }
     }
 }

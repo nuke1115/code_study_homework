@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HomeworkGame.Players.Player;
 
 namespace HomeworkGame.Characters.Monsters
 {
@@ -12,15 +8,22 @@ namespace HomeworkGame.Characters.Monsters
         {
             _type = eMonsterTypes.SKELETON;
         }
-
-        public override void Attack(List<CharacterBase> targets)
+        protected override void Attack(List<UnitBase>? targets)
         {
-            if (targets[0].IsDefense)
+            if(targets is null)
             {
-                Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {targets[0].GetType()} 인 {targets[0].GetName}의 견고한 방어를 뚫었다.");
+                return;
             }
 
-            targets[0].TakeDamage(_power);
+            UnitBase selectedUnit = targets[0];
+            if (selectedUnit.IsDefense)
+            {
+                Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {selectedUnit.GetName}의 견고한 방어를 뚫었다.");
+                selectedUnit.SetDefense(false);
+            }
+
+            selectedUnit.TakeDamage(_power);
+
         }
     }
 }

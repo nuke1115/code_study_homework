@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace HomeworkGame.Characters
 {
-    public abstract class CharacterBase
+    public abstract class CharacterBase<TTargetManager,TTargetBase>
     {
+        protected Random _random;
         protected string _name;
         private int _hp;
         protected int _power;
@@ -16,6 +17,7 @@ namespace HomeworkGame.Characters
 
         public CharacterBase(string name, int hp, int power)
         {
+            _random = new Random();
             _name = name;
             _hp = hp;
             _power = power;
@@ -32,12 +34,15 @@ namespace HomeworkGame.Characters
 
             _hp -= rate;
 
-            Console.WriteLine($"{_name} 은(는) {rate} 의 피해를 입었다.\n남은 체력은 {_hp} 다.");
-
-            if(_hp<=0)
+            if (_hp<=0)
             {
-                Console.WriteLine($"{_name} 은(는) 죽었다.");
+                Console.WriteLine($"{_name} 은(는) {rate}만큼의 피해를 마지막으로 죽었다.");
                 _isDead = true;
+                _hp = 0;
+            }
+            else
+            {
+                Console.WriteLine($"{_name} 은(는) {rate} 의 피해를 입었다.\n남은 체력은 {_hp} 다.");
             }
         }
         
@@ -71,12 +76,25 @@ namespace HomeworkGame.Characters
 
         public void SetDefense(bool option)
         {
+            if(option)
+            {
+                Console.WriteLine($"{_name} 은(는) 방어를 하기로 결정했습니다");
+            }
+            else
+            {
+                Console.WriteLine($"{_name}의 방어가 풀렸다.");
+            }
             _isDefense = option;
         }
 
+        protected virtual List<TTargetBase>? SelectTarget(TTargetManager targetManager)
+        {
+            return null;
+        }
 
-        public abstract void Attack(List<CharacterBase> targets);
+        protected abstract void Attack(List<TTargetBase>? targets);
 
+        public virtual void Act(TTargetManager targetManager) { }
 
 
     }
