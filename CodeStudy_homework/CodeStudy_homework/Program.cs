@@ -19,9 +19,10 @@ namespace HomeworkGame
 
         public static void Main()
         {
+
             MainProgram program = new MainProgram();
 
-
+            
             program.InitGameProgram();
 
             if (program.RunGame() == false)
