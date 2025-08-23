@@ -60,6 +60,7 @@ namespace HomeworkGame
                     else
                     {
                         _context.SetGameStatus(eGameStatus.GAME_TERMINATION);
+                        break;
                     }
 
                     var coord = Console.GetCursorPosition();

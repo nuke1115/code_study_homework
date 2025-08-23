@@ -19,16 +19,18 @@ namespace HomeworkGame.DungeonPlace
 
             _context.MoveNextTurn();
             PrintGameStatus(player,monster);
-            if(SelectUnit(player) == false)
-            {
-                return false;
-            }
-            player.GetSelectedCharacter().Act(monster);
-            if(SelectMonster(monster) == false)
+            Console.WriteLine("-------몬스터 턴-------");
+            if (SelectMonster(monster) == false)
             {
                 return false;
             }
             monster.GetSelectedCharacter().Act(player);
+            Console.WriteLine("-------플레이어 턴-------");
+            if (SelectUnit(player) == false)
+            {
+                return false;
+            }
+            player.GetSelectedCharacter().Act(monster);
             return true;
         }
 
