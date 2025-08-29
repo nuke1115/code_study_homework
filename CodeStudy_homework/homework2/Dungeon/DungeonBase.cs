@@ -24,8 +24,7 @@ namespace HomeworkGame.DungeonPlace
 
         protected virtual void PrintGameStatus(Player player, Monster monster)
         {
-            Console.WriteLine("--------------------");
-            Console.WriteLine($"턴 {_context.GetElapsedTurns} :");
+            Console.WriteLine($"-----{_context.GetElapsedTurns}턴-----");
             Console.WriteLine("몬스터 정보 : ");
             monster.PrintCharactersStatus();
             Console.WriteLine("유닛 정보 : ");

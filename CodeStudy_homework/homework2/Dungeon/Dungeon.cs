@@ -33,14 +33,12 @@ namespace HomeworkGame.DungeonPlace
 
         protected override bool SelectUnit(Player player)
         {
-            if(player.IsAllDead())
+            if (player.IsAllDead())
             {
                 return false;
             }
 
-            Console.WriteLine("유닛을 번호로 선택해주세요");
-
-            while(int.TryParse(Console.ReadLine(), out var selectedUnit) == false || player.SelectCharacter(selectedUnit - 1) == false);
+            while (player.SelectCharacter(_random.Next(0, _context.GetMaxUnitNum)) == false) ;
 
             return true;
         }

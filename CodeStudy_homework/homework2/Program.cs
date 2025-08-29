@@ -81,7 +81,7 @@ namespace HomeworkGame
                     }
                 }
 
-#if true
+#if false
                 ProcessGameLogics();
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
@@ -148,8 +148,6 @@ namespace HomeworkGame
  
 선택메시지 켜고 끄기:
 
-유닛 선택 기능 켜고 끄기:
-던전쪽에서 베이스 빼서 전략패턴 적용
 
 공격대상 선택 기능 켜고 끄기:
 
