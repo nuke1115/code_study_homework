@@ -11,35 +11,19 @@ namespace HomeworkGame.Characters.Units
             _type = eUnitTypes.KNIGHT;
         }
 
-        public override void ShowSelectMessage()
-        {
-            Console.WriteLine("기사 : 그냥 단단하고, 강하다.");
-            base.ShowSelectMessage();
-        }
-
-
-
-        protected override void Attack(List<MonsterBase>? targets)
+        protected override void Attack(IDamage? target)
         {
 
-            if(targets is null)
+            if (target is null || target.IsDead)
             {
                 return;
             }
 
-            MonsterBase selectedMonster = targets[0];
             _attackCount++;
 
-            if (selectedMonster.IsDefense)
-            {
-                Console.WriteLine($"{_type.ToString()} 인 {_name} 가  {selectedMonster.GetName} 를 공격하려 했으나 방어에 막혔다.");
-                selectedMonster.SetDefense(false);
-                return;
-            }
+            target.TakeDamage(_power);
 
-            selectedMonster.TakeDamage(_power);
-
-            if (selectedMonster.IsDead)
+            if (target.IsDead)
             {
                 _killCount++;
             }

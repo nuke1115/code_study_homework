@@ -9,35 +9,24 @@ namespace HomeworkGame.Characters.Monsters
             _type = eMonsterTypes.SLIME;
         }
 
-        protected override void Attack(List<UnitBase>? targets)
+        protected override void Attack(IDamage? target)
         {
-            if(targets is null)
+            if (target is null || target.IsDead)
             {
                 return;
             }
-            
-            foreach(UnitBase selectedTarget in targets)
-            {
-                if(selectedTarget.IsDead)
-                {
-                    continue;
-                }
 
-                if (selectedTarget.IsDefense)
-                {
-                    Console.WriteLine($"{_type.ToString()} 인 {_name} 가  {selectedTarget.GetName} 를 공격하려 했으나 방어에 막혔다.");
-                    selectedTarget.SetDefense(false);
-                    continue;
-                }
-
-                selectedTarget.TakeDamage(_power);
-            }
+            target.TakeDamage(_power);
 
         }
 
-        protected override List<UnitBase>? SelectTarget(Player player)
+
+        public override void Act(Player type)
         {
-            return player.GetCharacterList();
+            foreach (IDamage? target in type.GetCharacterList())
+            {
+                Attack(target);
+            }
         }
     }
 }

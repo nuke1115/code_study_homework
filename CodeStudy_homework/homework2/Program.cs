@@ -66,7 +66,7 @@ namespace HomeworkGame
             {
                 if (_context.GetGameStatus == eGameStatus.INITIAL_SCREEN)
                 {
-                    if(_nowInputStrategy.GetInput(_context, ref _nowInputStrategy))
+                    if(_nowInputStrategy.GetInput(_context, ref _nowInputStrategy))//전략을 바꾸는걸, 내부가 아닌 외부로 뺄까? 내부에서는 외부로 어떤 전략으로 바꿀지 넘겨주고
                     {
                         //모든 객체들의 입력 함수 업데이트 로직 짜기
                         UpdateObjectInpputStrategy();
@@ -81,7 +81,7 @@ namespace HomeworkGame
                     }
                 }
 
-#if false
+#if true
                 ProcessGameLogics();
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
@@ -151,5 +151,8 @@ namespace HomeworkGame
 
 공격대상 선택 기능 켜고 끄기:
 
+
+
+공격당한 대상 쓰기
  
  */

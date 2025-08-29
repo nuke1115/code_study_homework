@@ -5,7 +5,7 @@ using System;
 
 namespace HomeworkGame.Players.Monster
 {
-    public class Monster : PlayerBase<MonsterBase>
+    public class Monster : PlayerBase<MonsterBase> 
     {
         public Monster(GameContext context) : base(context) { }
 
@@ -47,7 +47,7 @@ namespace HomeworkGame.Players.Monster
                     Console.WriteLine($"{i+1} : 사망");
                     continue;
                 }
-                Console.WriteLine($"{i + 1} : 이름 : {_characters[i].GetName}, 종족 : {_characters[i].GetMonsterType.ToString()}, 체력 : {_characters[i].GetHp}, 공격력 : {_characters[i].GetPower}, 방어 : {_characters[i].IsDefense}");
+                Console.WriteLine($"{i + 1} : 이름 : {_characters[i].GetName}, 종족 : {_characters[i].GetMonsterType.ToString()}, 체력 : {_characters[i].GetHp}, 공격력 : {_characters[i].GetPower}");
             }
         }
 
@@ -76,14 +76,6 @@ namespace HomeworkGame.Players.Monster
             }
 
             _selectedUnit = _characters[0];
-        }
-
-        public override void ResetCharacterStatus()
-        {
-            foreach (MonsterBase unit in _characters)
-            {
-                unit.SetDefense(false);
-            }
         }
 
         public override bool IsDead(int index)

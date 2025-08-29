@@ -14,19 +14,10 @@ namespace HomeworkGame.Characters
 
         public override void Act(Player type)
         {
-            int act = _random.Next(1, 3);
-
-            if (act == 1)
-            {
-                Attack(SelectTarget(type));
-            }
-            else if (act == 2)
-            {
-                SetDefense(true);
-            }
+            Attack(SelectTarget(type));
         }
 
-        protected override List<UnitBase>? SelectTarget(Player player)
+        protected override IDamage? SelectTarget(Player player)
         {
             if (player.IsAllDead())
             {
@@ -37,7 +28,7 @@ namespace HomeworkGame.Characters
 
             while (player.TryGetCharacter(_random.Next(0, player.GetCharacterCount()), out target) == false) ;
 
-            return new List<UnitBase>() { target };
+            return target;
         }
     }
 }

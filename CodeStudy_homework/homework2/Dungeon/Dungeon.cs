@@ -14,14 +14,12 @@ namespace HomeworkGame.DungeonPlace
             _context.MoveNextTurn();
             PrintGameStatus(player,monster);
 
-            Console.WriteLine("-------플레이어 턴-------");
             if (SelectUnit(player) == false)
             {
                 return false;
             }
             player.GetSelectedCharacter().Act(monster);
 
-            Console.WriteLine("-------몬스터 턴-------");
             if (SelectMonster(monster) == false)
             {
                 return false;

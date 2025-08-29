@@ -41,12 +41,10 @@ namespace HomeworkGame.Players.Player
         {
             if(index >= _characters.Count || _characters[index].IsDead)
             {
-                Console.WriteLine("그 유닛은 이 세상에 존제하지 않습니다.");
                 return false;
             }
 
             _selectedUnit = _characters[index];
-            _selectedUnit.ShowSelectMessage();
             return true;
         }
 
@@ -99,17 +97,10 @@ namespace HomeworkGame.Players.Player
                     Console.WriteLine($"{i+1} : 이 유닛은 더이상 세상에 존제하지 않습니다.");
                     continue;
                 }
-                Console.WriteLine($"{i+1} : 이름 : {_characters[i].GetName}, 직업 : {_characters[i].GetUnitType.ToString()}, 체력 : {_characters[i].GetHp}, 공격력 : {_characters[i].GetPower}, 방어 : {_characters[i].IsDefense}");
+                Console.WriteLine($"{i+1} : 이름 : {_characters[i].GetName}, 직업 : {_characters[i].GetUnitType.ToString()}, 체력 : {_characters[i].GetHp}, 공격력 : {_characters[i].GetPower}");
             }
         }
 
-        public override void ResetCharacterStatus()
-        {
-            foreach(UnitBase unit in _characters)
-            {
-                unit.SetDefense(false);
-            }
-        }
 
         public override bool IsDead(int index)
         {

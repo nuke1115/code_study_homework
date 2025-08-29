@@ -11,24 +11,15 @@ namespace HomeworkGame.Characters.Monsters
 
 
 
-        protected override void Attack(List<UnitBase>? targets)
+        protected override void Attack(IDamage? target)
         {
             
-            if(targets is null)
+            if(target is null || target.IsDead)
             {
                 return;
             }
 
-            UnitBase selectedMonster = targets[0];
-
-            if (selectedMonster.IsDefense)
-            {
-                Console.WriteLine($"{_type.ToString()} 인 {_name} 가  {selectedMonster.GetName} 를 공격하려 했으나 방어에 막혔다.");
-                selectedMonster.SetDefense(false);
-                return;
-            }
-
-            selectedMonster.TakeDamage(_power);
+            target.TakeDamage(_power);
 
         }
     }

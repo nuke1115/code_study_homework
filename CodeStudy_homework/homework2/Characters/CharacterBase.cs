@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace HomeworkGame.Characters
 {
-    public abstract class CharacterBase<TTargetManager,TTargetBase>
+    public abstract class CharacterBase<TTargetManager,TTargetBase> : IDamage
     {
         protected Random _random;
         protected string _name;
         private int _hp;
         protected int _power;
-        private bool _isDefense;
         private bool _isDead;
 
         public CharacterBase(string name, int hp, int power)
@@ -21,7 +20,6 @@ namespace HomeworkGame.Characters
             _name = name;
             _hp = hp;
             _power = power;
-            _isDefense = false;
             _isDead = false;
         }
 
@@ -62,37 +60,15 @@ namespace HomeworkGame.Characters
             get { return _power; }
         }
 
-        public bool IsDefense
-        {
-            get { return _isDefense; }
-        }
 
         public bool IsDead
         {
             get { return _isDead; }
         }
 
+        protected abstract IDamage? SelectTarget(TTargetManager targetManager);
 
-
-        public void SetDefense(bool option)
-        {
-            if(option)
-            {
-                Console.WriteLine($"{_name} 은(는) 방어를 하기로 결정했습니다");
-            }
-            else
-            {
-                Console.WriteLine($"{_name}의 방어가 풀렸다.");
-            }
-            _isDefense = option;
-        }
-
-        protected virtual List<TTargetBase>? SelectTarget(TTargetManager targetManager)
-        {
-            return null;
-        }
-
-        protected abstract void Attack(List<TTargetBase>? targets);
+        protected abstract void Attack(IDamage? target);
 
         public virtual void Act(TTargetManager targetManager) { }
 

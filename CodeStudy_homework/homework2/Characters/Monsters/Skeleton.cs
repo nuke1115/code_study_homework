@@ -8,21 +8,14 @@ namespace HomeworkGame.Characters.Monsters
         {
             _type = eMonsterTypes.SKELETON;
         }
-        protected override void Attack(List<UnitBase>? targets)
+        protected override void Attack(IDamage? target)
         {
-            if(targets is null)
+            if (target is null || target.IsDead)
             {
                 return;
             }
 
-            UnitBase selectedUnit = targets[0];
-            if (selectedUnit.IsDefense)
-            {
-                Console.WriteLine($"{_type.ToString()} 인 {_name} 가 {selectedUnit.GetName}의 견고한 방어를 뚫었다.");
-                selectedUnit.SetDefense(false);
-            }
-
-            selectedUnit.TakeDamage(_power);
+            target.TakeDamage(_power);
 
         }
     }

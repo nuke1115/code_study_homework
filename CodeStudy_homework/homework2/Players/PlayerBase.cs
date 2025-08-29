@@ -1,5 +1,6 @@
 ﻿
 
+using HomeworkGame.Characters;
 using HomeworkGame.GameStatus;
 
 namespace HomeworkGame.Players
@@ -30,8 +31,6 @@ namespace HomeworkGame.Players
 
         public abstract void PrintCharactersStatus();
 
-        public abstract void ResetCharacterStatus();
-
         public abstract bool SelectCharacter(int index);
 
         public abstract T GetSelectedCharacter();
@@ -46,3 +45,4 @@ namespace HomeworkGame.Players
         }
     }
 }
+//타입제약을 걸어둬야, 베이스로 올려서 더 깔끔하게 짤 수 있겠다

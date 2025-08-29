@@ -18,6 +18,7 @@ namespace HomeworkGame.Input.InputStrategy
 
             if (!Console.KeyAvailable)
             {
+                context.SetGameStatus(eGameStatus.GAME_RUNNING);
                 return false;
             }
 
