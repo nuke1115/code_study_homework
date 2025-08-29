@@ -35,6 +35,24 @@ namespace HomeworkGame.Characters
             Attack(SelectTarget(type));
         }
 
+        protected override void Attack(IDamage? target)
+        {
+
+            if (target is null || target.IsDead)
+            {
+                return;
+            }
+
+            _attackCount++;
+
+            target.TakeDamage(_power, _name);
+
+            if (target.IsDead)
+            {
+                _killCount++;
+            }
+        }
+
         protected override IDamage? SelectTarget(Monster monster)
         {
 

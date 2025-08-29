@@ -9,17 +9,6 @@ namespace HomeworkGame.Characters.Monsters
             _type = eMonsterTypes.SLIME;
         }
 
-        protected override void Attack(IDamage? target)
-        {
-            if (target is null || target.IsDead)
-            {
-                return;
-            }
-
-            target.TakeDamage(_power, _name);
-
-        }
-
 
         public override void Act(Player type)
         {

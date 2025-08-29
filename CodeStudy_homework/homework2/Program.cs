@@ -74,7 +74,7 @@ namespace HomeworkGame
                     }
                 }
 
-#if false
+#if true
                 ProcessGameLogics();
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);

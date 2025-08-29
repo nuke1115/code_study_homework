@@ -8,19 +8,5 @@ namespace HomeworkGame.Characters.Monsters
         {
             _type = eMonsterTypes.OAK;
         }
-
-
-
-        protected override void Attack(IDamage? target)
-        {
-            
-            if(target is null || target.IsDead)
-            {
-                return;
-            }
-
-            target.TakeDamage(_power,_name);
-
-        }
     }
 }

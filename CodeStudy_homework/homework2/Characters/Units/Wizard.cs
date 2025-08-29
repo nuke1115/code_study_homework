@@ -12,24 +12,6 @@ namespace CodeStudy_homework_1.Characters.Units
             _type = eUnitTypes.WIZARD;
         }
 
-        protected override void Attack(IDamage? target)
-        {
-
-            if (target is null || target.IsDead)
-            {
-                return;
-            }
-
-            _attackCount++;
-
-            target.TakeDamage(_power, _name);
-
-            if (target.IsDead)
-            {
-                _killCount++;
-            }
-        }
-
         public override void Act(Monster type)
         {
             foreach(IDamage? target in type.GetCharacterList())
