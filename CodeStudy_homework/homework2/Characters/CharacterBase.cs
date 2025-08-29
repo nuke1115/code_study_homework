@@ -23,7 +23,7 @@ namespace HomeworkGame.Characters
             _isDead = false;
         }
 
-        public void TakeDamage(int rate)
+        public void TakeDamage(int rate, in string attacker)
         {
             if(_isDead)
             {
@@ -34,13 +34,13 @@ namespace HomeworkGame.Characters
 
             if (_hp<=0)
             {
-                Console.WriteLine($"{_name} 은(는) {rate}만큼의 피해를 마지막으로 죽었다.");
+                Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => 사망");
                 _isDead = true;
                 _hp = 0;
             }
             else
             {
-                Console.WriteLine($"{_name} 은(는) {rate} 의 피해를 입었다.\n남은 체력은 {_hp} 다.");
+                Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => {_hp}");
             }
         }
         

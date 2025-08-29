@@ -8,7 +8,7 @@ namespace HomeworkGame.Characters
 {
     public interface IDamage
     {
-        public void TakeDamage(int rate);
+        public void TakeDamage(int rate, in string attacker);
 
         public bool IsDead { get; }
     }

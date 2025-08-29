@@ -22,7 +22,7 @@ namespace CodeStudy_homework_1.Characters.Units
 
             _attackCount++;
 
-            target.TakeDamage(_power);
+            target.TakeDamage(_power, _name);
 
             if (target.IsDead)
             {

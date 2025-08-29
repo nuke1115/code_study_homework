@@ -19,7 +19,7 @@ namespace HomeworkGame.Characters.Monsters
                 return;
             }
 
-            target.TakeDamage(_power);
+            target.TakeDamage(_power,_name);
 
         }
     }
