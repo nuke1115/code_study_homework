@@ -11,7 +11,7 @@ namespace HomeworkGame.Input.InputStrategy
 
             Console.WriteLine("숙제-게임\n스페이스를 눌러 시작");
 
-            ConsoleKey key = Console.ReadKey().Key;
+            ConsoleKey key = Console.ReadKey(true).Key;
 
 
             if (key == ConsoleKey.Spacebar)

@@ -19,7 +19,7 @@ namespace HomeworkGame.Input.InputStrategy
             }
 
             
-            ConsoleKey key = Console.ReadKey().Key;
+            ConsoleKey key = Console.ReadKey(true).Key;
 
             if (key == ConsoleKey.Spacebar)
             {
