@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace HomeworkGame.Characters
 {
     public abstract class CharacterBase<TTargetManager,TTargetBase> : IDamage
@@ -68,7 +63,15 @@ namespace HomeworkGame.Characters
 
         protected abstract IDamage? SelectTarget(TTargetManager targetManager);
 
-        protected abstract void Attack(IDamage? target);
+        protected virtual void Attack(IDamage? target)
+        {
+            if (target is null || target.IsDead)
+            {
+                return;
+            }
+
+            target.TakeDamage(_power, _name);
+        }
 
         public virtual void Act(TTargetManager targetManager) { }
 

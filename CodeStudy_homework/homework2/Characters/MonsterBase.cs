@@ -18,18 +18,6 @@ namespace HomeworkGame.Characters
         }
 
 
-        protected override void Attack(IDamage? target)
-        {
-            if (target is null || target.IsDead)
-            {
-                return;
-            }
-
-            target.TakeDamage(_power, _name);
-
-        }
-
-
         protected override IDamage? SelectTarget(Player player)
         {
             if (player.IsAllDead())

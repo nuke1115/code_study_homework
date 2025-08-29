@@ -37,15 +37,14 @@ namespace HomeworkGame.Characters
 
         protected override void Attack(IDamage? target)
         {
-
-            if (target is null || target.IsDead)
+            if(target is null)
             {
                 return;
             }
 
-            _attackCount++;
+            base.Attack(target);
 
-            target.TakeDamage(_power, _name);
+            _attackCount++;
 
             if (target.IsDead)
             {
