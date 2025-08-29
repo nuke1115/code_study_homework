@@ -13,8 +13,8 @@ namespace HomeworkGame.Input.InputStrategy
         public bool GetInput(GameContext context, ref IInput nowInputStrategy)
         {
 
-            Console.WriteLine("1초 후 자동으로 재시작. 스페이스를 눌러 스페이스 모드로 전환.");
-            Thread.Sleep(1000);
+            Console.WriteLine("5초 후 자동으로 재시작. 스페이스를 눌러 스페이스 모드로 전환.");
+            Thread.Sleep(5000);
 
             if (!Console.KeyAvailable)
             {

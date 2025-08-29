@@ -24,7 +24,7 @@ namespace HomeworkGame
         GameContext _context;
         Player _player;
         Monster _monster;
-        Dungeon _dungeon;
+        DungeonBase _dungeon;
         Random _random;
         StratagyManager _mgr = new StratagyManager();
         IInput _nowInputStrategy;
@@ -32,8 +32,8 @@ namespace HomeworkGame
 
         public MainProgram()
         {
-            _context = new GameContext(3);
-            _player = new Player();
+            _context = new GameContext(3,3);
+            _player = new Player(_context);
             _monster = new Monster(_context);
             _dungeon = new Dungeon(_context);
             _random = new Random();
@@ -81,7 +81,7 @@ namespace HomeworkGame
                     }
                 }
 
-#if false
+#if true
                 ProcessGameLogics();
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
@@ -104,7 +104,7 @@ namespace HomeworkGame
 
         private void InitGameState()
         {
-            _context.ResetContext(_random.Next(1, 5));
+            _context.ResetContext(_random.Next(1, 10), _random.Next(1, 10));
             _player.ResetCharacters();
             _monster.ResetCharacters();
         }
@@ -141,3 +141,17 @@ namespace HomeworkGame
         }
     }
 }
+/*
+
+일단, 방어 있고 없고 로직 빼기, 행동 선택 로직 뺴기
+
+ 
+선택메시지 켜고 끄기:
+
+유닛 선택 기능 켜고 끄기:
+던전쪽에서 베이스 빼서 전략패턴 적용
+
+공격대상 선택 기능 켜고 끄기:
+
+ 
+ */

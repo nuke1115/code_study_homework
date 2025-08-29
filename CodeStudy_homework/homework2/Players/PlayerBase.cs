@@ -1,5 +1,7 @@
 ﻿
 
+using HomeworkGame.GameStatus;
+
 namespace HomeworkGame.Players
 {
     public abstract class PlayerBase<T>
@@ -7,11 +9,13 @@ namespace HomeworkGame.Players
         protected List<T> _characters;
         protected Random _random;
         protected T _selectedUnit;
-
-        public PlayerBase()
+        protected GameContext _context;
+        public PlayerBase(GameContext context)
         {
+            _context = context;
             _characters = new List<T>();
             _random = new Random();
+            ResetCharacters();
         }
 
         public List<T> GetCharacterList()

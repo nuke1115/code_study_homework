@@ -1,23 +1,38 @@
 ﻿using CodeStudy_homework_1.Characters.Units;
 using HomeworkGame.Characters;
 using HomeworkGame.Characters.Units;
+using HomeworkGame.GameStatus;
 
 namespace HomeworkGame.Players.Player
 {
     public class Player : PlayerBase<UnitBase>
     {
-        public Player() : base()
-        {
-            ResetCharacters();
-            
-        }
+        public Player(GameContext context) : base(context) { }
 
         public override void ResetCharacters()
         {
             _characters.Clear();
-            _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31)));
-            _characters.Add(new Archer("대한민국의 양궁 선수", _random.Next(30, 38), _random.Next(15, 26)));
-            _characters.Add(new Wizard("흑마법사", _random.Next(20, 26), _random.Next(10, 25)));
+
+            for (int i = 0; i < _context.GetMaxUnitNum; i++)
+            {
+                int spawnTarget = _random.Next(0, 3);
+
+                switch (spawnTarget)
+                {
+                    case 0:
+                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31)));
+                        break;
+                    case 1:
+                        _characters.Add(new Archer("대한민국의 양궁 선수", _random.Next(30, 38), _random.Next(15, 26)));
+                        break;
+                    case 2:
+                        _characters.Add(new Wizard("흑마법사", _random.Next(20, 26), _random.Next(10, 25)));
+                        break;
+                    default:
+                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31)));
+                        break;
+                }
+            }
 
             _selectedUnit = _characters[0];
         }

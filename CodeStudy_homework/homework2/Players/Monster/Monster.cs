@@ -7,15 +7,7 @@ namespace HomeworkGame.Players.Monster
 {
     public class Monster : PlayerBase<MonsterBase>
     {
-
-        private GameContext _context;
-        public Monster(GameContext context) : base()
-        {
-            _context = context;
-            ResetCharacters();
-            
-            
-        }
+        public Monster(GameContext context) : base(context) { }
 
         public override MonsterBase GetSelectedCharacter()
         {
@@ -66,23 +58,21 @@ namespace HomeworkGame.Players.Monster
             for (int i = 0; i < _context.GetMaxMonsterNum; i++)
             {
                 int spawnTarget = _random.Next(0, 3);
-                MonsterBase spawnedMonster;
                 switch (spawnTarget)
                 {
                     case 0:
-                        spawnedMonster = new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31));
+                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31)));
                         break;
                     case 1:
-                        spawnedMonster = new Skeleton($"지나가던 스켈레톤 {i + 1}", _random.Next(30, 38), _random.Next(15, 26));
+                        _characters.Add(new Skeleton($"지나가던 스켈레톤 {i + 1}", _random.Next(30, 38), _random.Next(15, 26)));
                         break;
                     case 2:
-                        spawnedMonster = new Slime($"지나가던 슬라임 {i + 1}", _random.Next(20, 26), _random.Next(10, 25));
+                        _characters.Add(new Slime($"지나가던 슬라임 {i + 1}", _random.Next(20, 26), _random.Next(10, 25)));
                         break;
                     default:
-                        spawnedMonster = new Slime($"던전에 상주하던 슬라임 {i + 1}", _random.Next(20, 26), _random.Next(10, 25));
+                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31)));
                         break;
                 }
-                _characters.Add(spawnedMonster);
             }
 
             _selectedUnit = _characters[0];
