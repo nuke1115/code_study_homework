@@ -4,14 +4,10 @@ namespace HomeworkGame.Input.InputStrategy
 {
     public class AKey : IInput
     {
-        StratagyManager _mgr;
-        public AKey(StratagyManager mgr)
-        {
-            _mgr = mgr;
-        }
 
-        public bool GetInput(GameContext context, ref IInput nowInputStrategy)
+        public bool GetInput(GameContext context, out eInputStratagies nowInputStrategy)
         {
+            nowInputStrategy = eInputStratagies.A_MODE;
 
             Console.WriteLine("5초 후 자동으로 재시작. 스페이스를 눌러 스페이스 모드로 전환.");
             Thread.Sleep(5000);
@@ -27,7 +23,7 @@ namespace HomeworkGame.Input.InputStrategy
 
             if (key == ConsoleKey.Spacebar)
             {
-                nowInputStrategy = _mgr.GetInputStrategy("SpaceKey");
+                nowInputStrategy = eInputStratagies.SPACE_MODE;
                 context.SetGameStatus(eGameStatus.GAME_RUNNING);
                 return true;
             }

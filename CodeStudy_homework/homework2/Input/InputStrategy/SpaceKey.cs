@@ -4,14 +4,10 @@ namespace HomeworkGame.Input.InputStrategy
 {
     public class SpaceKey : IInput
     {
-        private StratagyManager _mgr;
-        public SpaceKey(StratagyManager stratagyManager)
-        {
-            _mgr = stratagyManager;
-        }
 
-        public bool GetInput(GameContext context, ref IInput nowInputStrategy)
+        public bool GetInput(GameContext context, out eInputStratagies nowInputStrategy)
         {
+            nowInputStrategy = eInputStratagies.SPACE_MODE;
 
             Console.WriteLine("숙제-게임\n스페이스를 눌러 시작");
 
@@ -26,7 +22,7 @@ namespace HomeworkGame.Input.InputStrategy
             else if(key == ConsoleKey.A)
             {
                 context.SetGameStatus(eGameStatus.GAME_RUNNING);
-                nowInputStrategy = _mgr.GetInputStrategy("AKey");
+                nowInputStrategy = eInputStratagies.A_MODE;
                 return true;
             }
             else

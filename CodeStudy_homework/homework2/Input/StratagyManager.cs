@@ -8,18 +8,18 @@ namespace HomeworkGame.Input
 {
     public class StratagyManager
     {
-        private Dictionary<string, IInput> _inputStrategies = new Dictionary<string, IInput>();
+        private Dictionary<eInputStratagies, IInput> _inputStrategies = new Dictionary<eInputStratagies, IInput>();
         public StratagyManager()
         {
 
         }
 
-        public void RegisterStrategy(in string key, IInput strategy)
+        public void RegisterStrategy(eInputStratagies key, IInput strategy)
         {
             _inputStrategies.Add(key, strategy);
         }
 
-        public IInput GetInputStrategy(string key)
+        public IInput GetInputStrategy(eInputStratagies key)
         {
             return _inputStrategies[key];
         }

@@ -2,22 +2,12 @@
 using HomeworkGame.Characters;
 using HomeworkGame.DungeonPlace;
 using HomeworkGame.GameStatus;
-using System;
 using HomeworkGame.Players.Monster;
 using HomeworkGame.Input;
 using HomeworkGame.Input.InputStrategy;
 
 namespace HomeworkGame
 {
-
-    ///test
-
-
-
-
-
-    ///test
-
 
     public class MainProgram
     {
@@ -27,6 +17,7 @@ namespace HomeworkGame
         DungeonBase _dungeon;
         Random _random;
         StratagyManager _mgr = new StratagyManager();
+        DungeonManager _dungeonManager = new DungeonManager();
         IInput _nowInputStrategy;
 
 
@@ -38,11 +29,13 @@ namespace HomeworkGame
             _dungeon = new Dungeon(_context);
             _random = new Random();
 
+            _mgr.RegisterStrategy(eInputStratagies.A_MODE, new AKey());
+            _mgr.RegisterStrategy(eInputStratagies.SPACE_MODE, new SpaceKey());
 
-            _mgr.RegisterStrategy("AKey", new AKey(_mgr));
-            _mgr.RegisterStrategy("SpaceKey", new SpaceKey(_mgr));
+            _dungeonManager.RegisterStrategy(eInputStratagies.A_MODE, new SkipDungeon(_context));
+            _dungeonManager.RegisterStrategy(eInputStratagies.SPACE_MODE, new Dungeon(_context));
 
-            _nowInputStrategy = _mgr.GetInputStrategy("SpaceKey");
+            UpdateStrategy(eInputStratagies.SPACE_MODE);
         }
         
 
@@ -66,10 +59,10 @@ namespace HomeworkGame
             {
                 if (_context.GetGameStatus == eGameStatus.INITIAL_SCREEN)
                 {
-                    if(_nowInputStrategy.GetInput(_context, ref _nowInputStrategy))//전략을 바꾸는걸, 내부가 아닌 외부로 뺄까? 내부에서는 외부로 어떤 전략으로 바꿀지 넘겨주고
+                    
+                    if(_nowInputStrategy.GetInput(_context, out eInputStratagies  stratagy))
                     {
-                        //모든 객체들의 입력 함수 업데이트 로직 짜기
-                        UpdateObjectInpputStrategy();
+                        UpdateStrategy(stratagy);
                     }
 
                     Console.Clear();
@@ -81,7 +74,7 @@ namespace HomeworkGame
                     }
                 }
 
-#if true
+#if false
                 ProcessGameLogics();
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
@@ -97,9 +90,10 @@ namespace HomeworkGame
             return true;
         }
 
-        private void UpdateObjectInpputStrategy()
+        private void UpdateStrategy(eInputStratagies stratagy)
         {
-            Console.WriteLine("업데이트");
+            _nowInputStrategy = _mgr.GetInputStrategy(stratagy);
+            _dungeon = _dungeonManager.GetStrategy(stratagy);
         }
 
         private void InitGameState()

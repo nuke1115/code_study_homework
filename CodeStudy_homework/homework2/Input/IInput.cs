@@ -4,6 +4,6 @@ namespace HomeworkGame.Input
 {
     public interface IInput
     {
-        public bool GetInput(GameContext context, ref IInput nowInputStrategy);
+        public bool GetInput(GameContext context, out eInputStratagies nowInputStrategy);
     }
 }
