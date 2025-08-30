@@ -16,8 +16,8 @@ namespace HomeworkGame
         Monster _monster;
         DungeonBase _dungeon;
         Random _random;
-        StratagyManager _mgr = new StratagyManager();
-        DungeonManager _dungeonManager = new DungeonManager();
+        StratagyManager _mgr;
+        DungeonManager _dungeonManager;
         IInput _nowInputStrategy;
 
 
@@ -28,6 +28,8 @@ namespace HomeworkGame
             _monster = new Monster(_context);
             _dungeon = new Dungeon(_context);
             _random = new Random();
+            _mgr = new StratagyManager();
+            _dungeonManager = new DungeonManager();
 
             _mgr.RegisterStrategy(eInputStratagies.A_MODE, new AKey());
             _mgr.RegisterStrategy(eInputStratagies.SPACE_MODE, new SpaceKey());
@@ -41,7 +43,7 @@ namespace HomeworkGame
 
         public static void Main()
         {
-
+            
             MainProgram program = new MainProgram();
 
             if (program.RunGame() == false)
@@ -72,6 +74,13 @@ namespace HomeworkGame
                     {
                         break;
                     }
+
+                    if(_context.GetGameStatus != eGameStatus.GAME_RUNNING)
+                    {
+                        continue;
+                    }
+
+                    _context.MoveNextGame();
                 }
 
 #if true
@@ -79,7 +88,6 @@ namespace HomeworkGame
 #else
                 _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
 #endif
-
 
                 if (CheckGameEndCondition())
                 {
@@ -116,8 +124,7 @@ namespace HomeworkGame
 
         private bool ProcessGameLogics()
         {
-            bool ret = _dungeon.DoGameLogic(_player, _monster);
-            return ret;
+            return _dungeon.DoGameLogic(_player, _monster);
         }
 
         private bool CheckGameEndCondition()
@@ -128,20 +135,20 @@ namespace HomeworkGame
         private void EndGame()
         {
 
-            Console.WriteLine("========== 게임 종료 ==========");
-            Console.WriteLine($"-----총 {_context.GetElapsedTurns}턴 ------");
-            foreach (UnitBase unit in _player.GetCharacterList())
-            {
-                Console.WriteLine("--------------------");
-                Console.WriteLine($"{unit.GetName} ({unit.GetUnitType.ToString()})");
-                Console.WriteLine($"공격 횟수 : {unit.GetAttackCount} / 처치 횟수 {unit.GetKillCount}");
-                Console.Write($"체력 : {unit.GetHp} / 상태 : ");
-                Console.WriteLine(unit.IsDead ? "사망" : "생존");
-            }
-            Console.WriteLine("----------------------");
-            Console.Write($"결과 : ");
-            Console.WriteLine(_player.IsAllDead() ? "패배" : "승리");
-            Console.WriteLine("===========================");
+            Console.WriteLine($"===={_context.GetTotalElapsedGames}번째 게임 종료 ==========");
+            //Console.WriteLine($"------총 {_context.GetElapsedTurns}턴------");
+            //foreach (UnitBase unit in _player.GetCharacterList())
+            //{
+            //    Console.WriteLine("--------------------");
+            //    Console.WriteLine($"{unit.GetName} ({unit.GetUnitType.ToString()})");
+            //    Console.WriteLine($"공격 횟수 : {unit.GetAttackCount} / 처치 횟수 {unit.GetKillCount}");
+            //    Console.Write($"체력 : {unit.GetHp} / 상태 : ");
+            //    Console.WriteLine(unit.IsDead ? "사망" : "생존");
+            //}
+            //Console.WriteLine("----------------------");
+            //Console.Write($"결과 : ");
+            //Console.WriteLine(_player.IsAllDead() ? "패배" : "승리");
+            //Console.WriteLine("===========================");
             _context.SetGameStatus(eGameStatus.INITIAL_SCREEN);
         }
     }

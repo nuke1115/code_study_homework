@@ -7,7 +7,7 @@ namespace HomeworkGame.GameStatus
         private int _maxMonsterNum;
         private int _maxUnitNum;
         private int _turns = 0;
-
+        private int _totalElapsedGames = 0;
 
         public GameContext(int maxTargetNums, int maxUnitNums)
         {
@@ -21,6 +21,12 @@ namespace HomeworkGame.GameStatus
             _maxUnitNum = maxUnitNums;
             _maxMonsterNum = maxTargetNums;
             _turns = 0;
+        }
+
+        public void ResetGame()
+        {
+            ResetContext(3,3);
+            _totalElapsedGames = 0;
         }
         
         public int GetElapsedTurns
@@ -57,6 +63,17 @@ namespace HomeworkGame.GameStatus
         public void SetGameStatus(eGameStatus gameStatus)
         {
             _gameStatus = gameStatus;
+        }
+
+
+        public int GetTotalElapsedGames
+        {
+            get { return _totalElapsedGames; }
+        }
+        
+        public void MoveNextGame()
+        {
+            _totalElapsedGames++;
         }
     }
 }

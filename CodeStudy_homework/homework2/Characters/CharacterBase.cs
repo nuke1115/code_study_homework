@@ -35,12 +35,12 @@ namespace HomeworkGame.Characters
                 _hp = 0;
                 if(_printLog)
                 {
-                    Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => 사망");
+                    Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate}받고 사망");
                 }
             }
             else if (_printLog)
             {
-                Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => {_hp}");
+                Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate}받고 체력 {_hp}됨");
             }
         }
         
@@ -68,7 +68,7 @@ namespace HomeworkGame.Characters
 
         protected abstract IDamage? SelectTarget(TTargetManager targetManager);
 
-        protected virtual void Attack(IDamage? target)//이걸 그냥, 다른 클래스로 만들고, 내부에 사용할 패턴을 정의한 그 클래스를 인스턴스로 가지게 할까? 그러면 갈아끼우기도 그냐마 간단해지는데
+        protected virtual void Attack(IDamage? target)//이걸 그냥, 다른 클래스로 만들고, 내부에 사용할 패턴을 정의한 그 클래스를 인스턴스로 가지게 할까? 그러면 갈아끼우기도 그냐마 간단해지는데. 보류
         {
             if (target is null || target.IsDead)
             {
@@ -78,7 +78,7 @@ namespace HomeworkGame.Characters
             target.TakeDamage(_power, _name);
         }
 
-        public virtual void Act(TTargetManager targetManager) { }
+        public virtual void Act(TTargetManager targetManager) { }//제네릭 한정자로 개선 가능
 
 
     }
