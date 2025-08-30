@@ -7,7 +7,7 @@ namespace HomeworkGame.Players.Player
 {
     public class Player : PlayerBase<UnitBase>
     {
-        public Player(GameContext context) : base(context) { }
+        public Player(GameContext context,bool printLog = true) : base(context, printLog) { }
 
         public override void ResetCharacters()
         {
@@ -20,16 +20,16 @@ namespace HomeworkGame.Players.Player
                 switch (spawnTarget)
                 {
                     case 0:
-                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31)));
+                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31), _printLog));
                         break;
                     case 1:
-                        _characters.Add(new Archer("대한민국의 양궁 선수", _random.Next(30, 38), _random.Next(15, 26)));
+                        _characters.Add(new Archer("대한민국의 양궁 선수", _random.Next(30, 38), _random.Next(15, 26), _printLog));
                         break;
                     case 2:
-                        _characters.Add(new Wizard("흑마법사", _random.Next(20, 26), _random.Next(10, 25)));
+                        _characters.Add(new Wizard("흑마법사", _random.Next(20, 26), _random.Next(10, 25), _printLog));
                         break;
                     default:
-                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31)));
+                        _characters.Add(new Knight("흙(수저)기사", _random.Next(30, 41), _random.Next(20, 31), _printLog));
                         break;
                 }
             }

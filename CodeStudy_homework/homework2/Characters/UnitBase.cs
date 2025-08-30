@@ -9,7 +9,7 @@ namespace HomeworkGame.Characters
         protected int _killCount;
         protected eUnitTypes _type;
 
-        public UnitBase(string name, int hp, int power) : base(name, hp, power)
+        public UnitBase(string name, int hp, int power, bool printLog) : base(name, hp, power,printLog)
         {
             _attackCount = 0;
             _killCount = 0;

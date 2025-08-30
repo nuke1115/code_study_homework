@@ -10,7 +10,7 @@ namespace HomeworkGame.Input.InputStrategy
             nowInputStrategy = eInputStratagies.A_MODE;
 
             Console.WriteLine("5초 후 자동으로 재시작. 스페이스를 눌러 스페이스 모드로 전환.");
-            Thread.Sleep(5000);
+            Thread.Sleep(5000);//이거로 정지시켜도 입력 스트림에 넣는 동작은 살아있나
 
             if (!Console.KeyAvailable)
             {

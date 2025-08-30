@@ -4,7 +4,7 @@ namespace HomeworkGame.Characters.Monsters
 {
     public class Slime : MonsterBase
     {
-        public Slime(string name, int hp, int power) : base(name, hp, power)
+        public Slime(string name, int hp, int power,bool printLog) : base(name, hp, power, printLog)
         {
             _type = eMonsterTypes.SLIME;
         }

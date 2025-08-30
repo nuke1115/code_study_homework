@@ -8,17 +8,19 @@ namespace HomeworkGame.Characters
         private int _hp;
         protected int _power;
         private bool _isDead;
+        private readonly bool _printLog;
 
-        public CharacterBase(string name, int hp, int power)
+        public CharacterBase(string name, int hp, int power, bool printLog)
         {
             _random = new Random();
             _name = name;
             _hp = hp;
             _power = power;
             _isDead = false;
+            _printLog = printLog;
         }
 
-        public void TakeDamage(int rate, in string attacker)
+        public void TakeDamage(int rate, in string attacker)//근데, 어차피 한 게임이 끝나면 새로 생성되고, 출력 설정은 게임마다 바뀌는데, 생성자에서 출력 여ㅕ부 넣어주고, 여기서 그거에 따라 출력할지 말지 정할까?
         {
             if(_isDead)
             {
@@ -29,11 +31,14 @@ namespace HomeworkGame.Characters
 
             if (_hp<=0)
             {
-                Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => 사망");
                 _isDead = true;
                 _hp = 0;
+                if(_printLog)
+                {
+                    Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => 사망");
+                }
             }
-            else
+            else if (_printLog)
             {
                 Console.WriteLine($"{attacker} -> {_name} : 피해 => {rate} => {_hp}");
             }
@@ -63,7 +68,7 @@ namespace HomeworkGame.Characters
 
         protected abstract IDamage? SelectTarget(TTargetManager targetManager);
 
-        protected virtual void Attack(IDamage? target)
+        protected virtual void Attack(IDamage? target)//이걸 그냥, 다른 클래스로 만들고, 내부에 사용할 패턴을 정의한 그 클래스를 인스턴스로 가지게 할까? 그러면 갈아끼우기도 그냐마 간단해지는데
         {
             if (target is null || target.IsDead)
             {
@@ -78,3 +83,8 @@ namespace HomeworkGame.Characters
 
     }
 }
+/*
+근데, 굳이 IDamage에 모든걸 만들어둬야 할까?
+일단, 지금 저렇게 해두고, 나중에 HP인터페이스 만들면, 그때 분리시키고, 그 인터페이스 상속시키자
+ 
+ */

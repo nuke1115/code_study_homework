@@ -7,7 +7,7 @@ namespace HomeworkGame.Players.Monster
 {
     public class Monster : PlayerBase<MonsterBase> 
     {
-        public Monster(GameContext context) : base(context) { }
+        public Monster(GameContext context, bool printLog = true) : base(context,printLog) { }
 
         public override MonsterBase GetSelectedCharacter()
         {
@@ -61,16 +61,16 @@ namespace HomeworkGame.Players.Monster
                 switch (spawnTarget)
                 {
                     case 0:
-                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31)));
+                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31), _printLog));
                         break;
                     case 1:
-                        _characters.Add(new Skeleton($"지나가던 스켈레톤 {i + 1}", _random.Next(30, 38), _random.Next(15, 26)));
+                        _characters.Add(new Skeleton($"지나가던 스켈레톤 {i + 1}", _random.Next(30, 38), _random.Next(15, 26), _printLog));
                         break;
                     case 2:
-                        _characters.Add(new Slime($"지나가던 슬라임 {i + 1}", _random.Next(20, 26), _random.Next(10, 25)));
+                        _characters.Add(new Slime($"지나가던 슬라임 {i + 1}", _random.Next(20, 26), _random.Next(10, 25), _printLog));
                         break;
                     default:
-                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31)));
+                        _characters.Add(new Oak($"지나가던 오크 {i + 1}", _random.Next(30, 41), _random.Next(20, 31), _printLog));
                         break;
                 }
             }

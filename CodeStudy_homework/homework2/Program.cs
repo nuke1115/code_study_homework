@@ -94,6 +94,17 @@ namespace HomeworkGame
         {
             _nowInputStrategy = _mgr.GetInputStrategy(stratagy);
             _dungeon = _dungeonManager.GetStrategy(stratagy);
+            
+            if(stratagy == eInputStratagies.SPACE_MODE)
+            {
+                _player.SetLogState(true);
+                _monster.SetLogState(true);
+            }
+            else if(stratagy == eInputStratagies.A_MODE)
+            {
+                _player.SetLogState(false);
+                _monster.SetLogState(false);
+            }
         }
 
         private void InitGameState()
@@ -119,7 +130,8 @@ namespace HomeworkGame
         {
 
             Console.WriteLine("========== 게임 종료 ==========");
-            foreach(UnitBase unit in _player.GetCharacterList())
+            Console.WriteLine($"-----총 {_context.GetElapsedTurns}턴 ------");
+            foreach (UnitBase unit in _player.GetCharacterList())
             {
                 Console.WriteLine("--------------------");
                 Console.WriteLine($"{unit.GetName} ({unit.GetUnitType.ToString()})");
@@ -137,16 +149,34 @@ namespace HomeworkGame
 }
 /*
 
-일단, 방어 있고 없고 로직 빼기, 행동 선택 로직 뺴기
+
+저거 TakeDamage함수만 호출 되면, 일단 데미지는 들어가잖아
+그리고, 거기서 출력기능은 부가적인거고, 호출쪽에서 처리해도 문제가 없다?
+
+-----------
+
+
+일단, 방어 있고 없고 로직 빼기, 행동 선택 로직 뺴기,공격당한대상 다시 표시
 
  
 선택메시지 켜고 끄기:
 
-
-공격대상 선택 기능 켜고 끄기:
-
-
-
-공격당한 대상 쓰기
  
+
+Thread.Sleep으로 메인 스레드를 멈춰도, 입력자체는 그 기간동안 입력된건 들어가네?
+왜지?
+입력은 메인스레드하고 별계로 처리되나? <= stream클래스에서 답을 볼 수 있을거같은데
+
+
+-----
+Thread.Sleep(5000);
+Console.ReadLine();
+이런 코드가 있을 때,
+c#에서 현제 스레드를 잠시 정지하는 Thread.Sleep으로 현제 스레드를 잠깐 정지하는 동안 입력한 키보드 입력이 정지가 풀린 후 입력이 됩니다.
+Console클래스는 표준 입력 스트림에서 데이터를 읽어온다고 하는데, 저 스트림에 데이터를 넣는 동작은 현제 스레드의 정지 여부에 상관 없이 동작하나
+
+아니면, 정지가 끝난 후, 스트림이 한번에 읽어오나?
+근데 ,그러면 어디에 쌓아둘건데?
+딱히 어딘가에 쌓아둘만한것도 없을거같은데(키보드 누르면 인터럽트로 데이터 읽게한다는걸 듣긴 함)
+표준입력스트림에 넣는건 메인스레드에 관계 없이 작동한다는게 가장 타당할거같은데
  */

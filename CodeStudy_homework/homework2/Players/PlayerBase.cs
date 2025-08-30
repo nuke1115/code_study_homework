@@ -11,12 +11,19 @@ namespace HomeworkGame.Players
         protected Random _random;
         protected T _selectedUnit;
         protected GameContext _context;
-        public PlayerBase(GameContext context)
+        protected bool _printLog;
+        public PlayerBase(GameContext context,bool printLog)
         {
             _context = context;
             _characters = new List<T>();
             _random = new Random();
+            SetLogState(printLog);
             ResetCharacters();
+        }
+
+        public void SetLogState(bool printLog)
+        {
+            _printLog = printLog;
         }
 
         public List<T> GetCharacterList()

@@ -5,7 +5,7 @@ namespace CodeStudy_homework_1.Characters.Units
 {
     public class Wizard : UnitBase
     {
-        public Wizard(string name, int hp, int power) : base(name, hp, power)
+        public Wizard(string name, int hp, int power, bool printLog) : base(name, hp, power, printLog)
         {
             _attackCount = 0;
             _killCount = 0;
