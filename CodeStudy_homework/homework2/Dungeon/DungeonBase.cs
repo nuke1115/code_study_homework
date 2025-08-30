@@ -16,19 +16,6 @@ namespace HomeworkGame.DungeonPlace
         }
 
         public abstract bool DoGameLogic(Player player, Monster monster);
-
-
-        protected abstract bool SelectUnit(Player player);
-
-        protected abstract bool SelectMonster(Monster monster);
-
-        protected virtual void PrintGameStatus(Player player, Monster monster)
-        {
-            Console.WriteLine($"-----{_context.GetElapsedTurns}턴-----");
-            Console.WriteLine("몬스터 정보 : ");
-            monster.PrintCharactersStatus();
-            Console.WriteLine("유닛 정보 : ");
-            player.PrintCharactersStatus();
-        }
+        
     }
 }

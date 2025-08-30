@@ -117,7 +117,6 @@ namespace HomeworkGame
         private bool ProcessGameLogics()
         {
             bool ret = _dungeon.DoGameLogic(_player, _monster);
-            Console.WriteLine("--------------------");
             return ret;
         }
 

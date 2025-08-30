@@ -29,7 +29,7 @@ namespace HomeworkGame.DungeonPlace
             return true;
         }
 
-        protected override bool SelectUnit(Player player)
+        private bool SelectUnit(Player player)
         {
             if (player.IsAllDead())
             {
@@ -41,7 +41,7 @@ namespace HomeworkGame.DungeonPlace
             return true;
         }
 
-        protected override bool SelectMonster(Monster monster)
+        private bool SelectMonster(Monster monster)
         {
             if(monster.IsAllDead())
             {
@@ -51,6 +51,15 @@ namespace HomeworkGame.DungeonPlace
             while (monster.SelectCharacter(_random.Next(0, _context.GetMaxMonsterNum)) == false);
 
             return true;
+        }
+
+        private void PrintGameStatus(Player player, Monster monster)
+        {
+            Console.WriteLine($"-----{_context.GetElapsedTurns}턴-----");
+            Console.WriteLine("몬스터 정보 : ");
+            monster.PrintCharactersStatus();
+            Console.WriteLine("유닛 정보 : ");
+            player.PrintCharactersStatus();
         }
     }
 }

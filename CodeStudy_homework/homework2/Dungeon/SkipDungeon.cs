@@ -12,7 +12,6 @@ namespace HomeworkGame.DungeonPlace
         public override bool DoGameLogic(Player player, Monster monster)
         {
             _context.MoveNextTurn();
-            PrintGameStatus(player, monster);
 
             if (SelectUnit(player) == false)
             {
@@ -29,7 +28,7 @@ namespace HomeworkGame.DungeonPlace
             return true;
         }
 
-        protected override bool SelectUnit(Player player)
+        private bool SelectUnit(Player player)
         {
             if (player.IsAllDead())
             {
@@ -41,7 +40,7 @@ namespace HomeworkGame.DungeonPlace
             return true;
         }
 
-        protected override bool SelectMonster(Monster monster)
+        private bool SelectMonster(Monster monster)
         {
             if (monster.IsAllDead())
             {
@@ -51,11 +50,6 @@ namespace HomeworkGame.DungeonPlace
             while (monster.SelectCharacter(_random.Next(0, _context.GetMaxMonsterNum)) == false) ;
 
             return true;
-        }
-
-        protected override void PrintGameStatus(Player player, Monster monster)
-        {
-            Console.WriteLine($"-----{_context.GetElapsedTurns}턴-----");
         }
     }
 }
