@@ -70,6 +70,16 @@ namespace hw3
             return _arr[_index];
         }
 
+        public int GetCount()
+        {
+            return _index + 1;
+        }
+
+        public void Clear()
+        {
+            _index = -1;
+        }
+
         public bool IsEmpty()
         {
             return _index < 0;
