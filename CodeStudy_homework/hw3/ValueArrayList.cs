@@ -1,4 +1,6 @@
 ﻿
+using System.Security.Cryptography;
+
 namespace hw3
 {
     public class ValueArrayList<T> where T : struct
@@ -6,6 +8,7 @@ namespace hw3
         private T[] _arr;
         private int _maxSize;
         private int _count = -1;
+        private EqualityComparer<T> _comparer;
 
         public ValueArrayList(int capacity)
         {
@@ -15,6 +18,7 @@ namespace hw3
             }
             _maxSize = capacity;
             _arr = new T[capacity];
+            _comparer = EqualityComparer<T>.Default;
         }
 
         public T this[int index]
@@ -44,7 +48,7 @@ namespace hw3
             {
                 throw new IndexOutOfRangeException("가득 찬 리스트에 원소 삽입 시도");
             }
-
+            
             _count++;
             _arr[_count] = value;
         }
@@ -116,6 +120,19 @@ namespace hw3
             _maxSize = newCapacity;
 
             return true;
+        }
+
+        public bool Constains(T item)
+        {
+            foreach (T item2 in _arr)
+            {
+                if(_comparer.Equals(item2, item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public int GetCount()
