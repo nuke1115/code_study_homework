@@ -6,6 +6,8 @@ namespace hw3
         private T[] _arr;
         private int _maxSize;
         private int _index = -1;
+        private int _count = 0;
+        private EqualityComparer<T> _comparer;
 
         public ValueStack(int capacity)
         {
@@ -15,6 +17,7 @@ namespace hw3
             }
             _maxSize = capacity;
             _arr = new T[_maxSize];
+            _comparer = EqualityComparer<T>.Default;
         }
 
         public bool Resize(int newCapacity)
@@ -29,9 +32,10 @@ namespace hw3
                 return false;
             }
 
-            if(_maxSize > newCapacity)
+            if(GetCount() > newCapacity)
             {
                 _index = newCapacity - 1;
+                _count = newCapacity;
             }
 
             _maxSize = newCapacity;
@@ -47,6 +51,7 @@ namespace hw3
             }
 
             _index++;
+            _count++;
             _arr[_index] = item;
         }
 
@@ -57,6 +62,7 @@ namespace hw3
                 throw new IndexOutOfRangeException("빈 스텍에서 Pop 시도");
             }
 
+            _count--;
             _index--;
         }
         
@@ -72,22 +78,36 @@ namespace hw3
 
         public int GetCount()
         {
-            return _index + 1;
+            return _count;
         }
 
         public void Clear()
         {
             _index = -1;
+            _count = 0;
+        }
+
+        public bool Contains(T item)
+        {
+            for(int i =0; i < _index + 1; i++)
+            {
+                if (_comparer.Equals(_arr[i], item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool IsEmpty()
         {
-            return _index < 0;
+            return _count == 0;
         }
 
         public bool IsFull()
         {
-            return _index == _maxSize - 1;
+            return _count == _maxSize;
         }
     }
 }
