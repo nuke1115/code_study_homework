@@ -1,7 +1,7 @@
 ﻿
 namespace hw3
 {
-    public class ValueQueue<T> where T : struct
+    public class ValueQueue<T>
     {
         private T[] _arr;
         private int _maxCount;

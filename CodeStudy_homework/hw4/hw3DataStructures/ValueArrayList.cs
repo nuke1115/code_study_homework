@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace hw3
 {
-    public class ValueArrayList<T> : IEnumerable<T> where T : struct
+    public class ValueArrayList<T> : IEnumerable<T>
     {
         private T[] _arr;
         private int _maxSize;

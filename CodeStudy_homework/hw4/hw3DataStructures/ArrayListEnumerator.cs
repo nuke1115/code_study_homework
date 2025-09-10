@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace hw3
 {
-    public class ArrayListEnumerator<T> : IEnumerator<T> where T : struct
+    public class ArrayListEnumerator<T> : IEnumerator<T>
     {
 
         private T[] _target;

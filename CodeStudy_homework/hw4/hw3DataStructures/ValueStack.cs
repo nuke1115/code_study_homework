@@ -1,7 +1,7 @@
 ﻿
 namespace hw3
 {
-    public class ValueStack<T> where T : struct
+    public class ValueStack<T>
     {
         private T[] _arr;
         private int _maxSize;
