@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace hw3
 {
-    public class ValueArrayList<T> : IEnumerable<T>
+    public class MyArrayList<T> : IEnumerable<T>
     {
         private T[] _arr;
         private int _maxSize;
@@ -11,7 +11,7 @@ namespace hw3
         private int _count = 0;
         private EqualityComparer<T> _comparer;
 
-        public ValueArrayList(int capacity)
+        public MyArrayList(int capacity)
         {
             if(capacity < 0)
             {
@@ -102,6 +102,7 @@ namespace hw3
         {
             _index = -1;
             _count = 0;
+            Array.Clear(_arr);
         }
 
         public bool Resize(int newCapacity)
