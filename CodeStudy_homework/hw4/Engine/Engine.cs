@@ -16,9 +16,10 @@ namespace hw4.Engine
         private double _fixedDeltaTimeInterval;
         private double _deltaTimeInterval;
 
-        public event LifeCycleAction UpdateEvent;
-        public event LifeCycleAction FixedUpdateEvent;
-        public event LifeCycleAction LateUpdateEvent;
+        private MyArrayList<LifeCycleAction> _startEventList = new MyArrayList<LifeCycleAction>(32);
+        private event LifeCycleAction _updateEvent;
+        private event LifeCycleAction _fixedUpdateEvent;
+        private event LifeCycleAction _lateUpdateEvent;
 
 
         public Engine(int targetFps)
@@ -40,6 +41,16 @@ namespace hw4.Engine
             {
                 watch.Restart();
 
+                if(!_startEventList.IsEmpty())
+                {
+                    foreach(LifeCycleAction action in _startEventList)
+                    {
+                        action.Invoke();
+                    }
+
+                    _startEventList.Clear();
+                }
+
                 if(Console.KeyAvailable)
                 {
                     _keyPressedEvent?.Invoke(new KeyEventArgs(Console.ReadKey(true)));
@@ -47,17 +58,17 @@ namespace hw4.Engine
 
                 if(fixedDeltaTime >= _fixedDeltaTimeInterval)
                 {
-                    FixedUpdateEvent?.Invoke();
+                    _fixedUpdateEvent?.Invoke();
                     fixedDeltaTime -= _fixedDeltaTimeInterval;
                 }
 
                 if (deltaTime >= _deltaTimeInterval)
                 {
-                    UpdateEvent?.Invoke();
+                    _updateEvent?.Invoke();
                     deltaTime = 0;
                 }
 
-                LateUpdateEvent?.Invoke();
+                _lateUpdateEvent?.Invoke();
 
                 if(_gameObjectRemoveFlag)
                 {
@@ -87,27 +98,29 @@ namespace hw4.Engine
 
         public TGameObjectType Instantiate<TGameObjectType>() where TGameObjectType : GameObjectBehaviour, new()
         {
-            if(_gameObjects.IsFull() && _gameObjects.Resize(_gameObjects.GetCount() * 2))
+            if(_gameObjects.IsFull() && !_gameObjects.Resize(_gameObjects.GetCount() * 2))
+            {
+                throw new OutOfMemoryException("객체 최대 양 초과");
+            }
+
+            if(_startEventList.IsFull() && !_startEventList.Resize(_startEventList.GetCount()*2))
             {
                 throw new OutOfMemoryException("객체 최대 양 초과");
             }
 
             TGameObjectType obj = new TGameObjectType();
 
-            FixedUpdateEvent += obj.FixedUpdate;
-            UpdateEvent += obj.Update;
-            LateUpdateEvent += obj.LateUpdate;
+            _fixedUpdateEvent += obj.FixedUpdate;
+            _updateEvent += obj.Update;
+            _lateUpdateEvent += obj.LateUpdate;
             obj.KeyEventPublisher = this;
             obj.GameObjectRequester = this;
             obj.Terminator = this;
 
             _gameObjects.Add(obj);
 
-
             obj.Awake();
-            obj.Start();
-
-            
+            _startEventList.Add(obj.Start);
 
             return obj;
         }

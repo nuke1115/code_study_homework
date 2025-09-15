@@ -11,20 +11,27 @@ namespace hw4.Engine.GameObject
         private bool _componentRemoveFlag = false;
         public bool IsDestroyed { get; set; }
         public int GameObjectNumber { get; set; } = 0;
+        private MyArrayList<LifeCycleAction> _startEvents = new MyArrayList<LifeCycleAction>(32);
         public event LifeCycleAction UpdateEvent;
         public event LifeCycleAction FixedUpdateEvent;
         public event LifeCycleAction LateUpdateEvent;
+
         
         public IKeyEventPublisher KeyEventPublisher { get; set; }
         public IGameObjectRequestable GameObjectRequester { get; set; }
         public ITerminatable Terminator { get; set; }
+
+        public void SubscribeStartEvent(LifeCycleAction startFunc)
+        {
+            _startEvents.Add(startFunc);
+        }
         
         
         public TComponentType AddComponent<TComponentType>() where TComponentType : ComponentBehaviour, new()
         {
-            if(_components.IsFull())
+            if (_components.IsFull() && _components.Resize(_components.GetCount() * 2))
             {
-                return default(TComponentType);
+                throw new OutOfMemoryException("컴포넌트 최대 양 초과");
             }
             TComponentType component = new TComponentType();
             component.ComponentOwner = this;
@@ -61,6 +68,15 @@ namespace hw4.Engine.GameObject
         public virtual void Start() { }
         public void Update()
         {
+            if(!_startEvents.IsEmpty())
+            {
+                foreach(var startFunc in _startEvents)
+                {
+                    startFunc.Invoke();
+                }
+                _startEvents.Clear();
+            }
+
             UpdateEvent?.Invoke();
         }
         public void FixedUpdate()
