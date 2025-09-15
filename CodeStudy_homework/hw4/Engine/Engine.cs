@@ -16,7 +16,7 @@ namespace hw4.Engine
         private double _fixedDeltaTimeInterval;
         private double _deltaTimeInterval;
 
-        private MyArrayList<LifeCycleAction> _startEventList = new MyArrayList<LifeCycleAction>(32);
+        private MyArrayList<LifeCycleAction> _startEventList = new MyArrayList<LifeCycleAction>(32);//이거 자료구조 더 안전한거로 바꿔. Start에서 객체 생성하면 씹힐 가능성 있음
         private event LifeCycleAction _updateEvent;
         private event LifeCycleAction _fixedUpdateEvent;
         private event LifeCycleAction _lateUpdateEvent;

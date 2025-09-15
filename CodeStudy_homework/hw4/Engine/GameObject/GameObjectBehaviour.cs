@@ -7,11 +7,11 @@ namespace hw4.Engine.GameObject
 {
     public abstract class GameObjectBehaviour : IComponentable, ILifeCyclable
     {
-        private MyArrayList<ComponentBehaviour> _components = new MyArrayList<ComponentBehaviour>(16);
+        private MyArrayList<ComponentBehaviour> _components = new MyArrayList<ComponentBehaviour>(32);
         private bool _componentRemoveFlag = false;
         public bool IsDestroyed { get; set; }
         public int GameObjectNumber { get; set; } = 0;
-        private MyArrayList<LifeCycleAction> _startEvents = new MyArrayList<LifeCycleAction>(32);
+        private MyArrayList<LifeCycleAction> _startEvents = new MyArrayList<LifeCycleAction>(32);//이거 자료구조 더 안전한거로 바꿔. Start에서 객체 생성하면 씹힐 가능성 있음
         public event LifeCycleAction UpdateEvent;
         public event LifeCycleAction FixedUpdateEvent;
         public event LifeCycleAction LateUpdateEvent;
@@ -21,11 +21,6 @@ namespace hw4.Engine.GameObject
         public IGameObjectRequestable GameObjectRequester { get; set; }
         public ITerminatable Terminator { get; set; }
 
-        public void SubscribeStartEvent(LifeCycleAction startFunc)
-        {
-            _startEvents.Add(startFunc);
-        }
-        
         
         public TComponentType AddComponent<TComponentType>() where TComponentType : ComponentBehaviour, new()
         {
@@ -33,10 +28,18 @@ namespace hw4.Engine.GameObject
             {
                 throw new OutOfMemoryException("컴포넌트 최대 양 초과");
             }
+
+            if (_startEvents.IsFull() && !_startEvents.Resize(_startEvents.GetCount() * 2))
+            {
+                throw new OutOfMemoryException("컴포넌트 최대 양 초과");
+            }
+
             TComponentType component = new TComponentType();
             component.ComponentOwner = this;
             component.Awake();
-            component.Start();
+
+            _startEvents.Add(component.Start);
+
             _components.Add(component);
             return component;
         }
