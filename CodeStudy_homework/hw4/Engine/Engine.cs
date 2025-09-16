@@ -33,6 +33,7 @@ namespace hw4.Engine
         {
             double deltaTime = 0;
             double fixedDeltaTime = 0;
+            
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -65,10 +66,11 @@ namespace hw4.Engine
                 if (deltaTime >= _deltaTimeInterval)
                 {
                     _updateEvent?.Invoke();
+                    _lateUpdateEvent?.Invoke();
                     deltaTime = 0;
                 }
 
-                _lateUpdateEvent?.Invoke();
+                //
 
                 if(_gameObjectRemoveFlag)
                 {
