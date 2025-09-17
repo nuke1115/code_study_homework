@@ -8,7 +8,8 @@ namespace hw4.Game.GameContext
         public bool SkipInfo {  get; set; }
         public int GameLoopCnt { get { return _cnt; }}
         public int ElapsedGameCnt { get { return _elapsedGames; }}
-        public ConsoleKeyInfo PressedKeyInfo { get; set; }
+        public char PressedKeyChar { get; set; }
+        public ConsoleKey PressedConsoleKey { get; set; }
 
         public eGameStates GameState { get; set; }
         public void ResetLoopCnt()

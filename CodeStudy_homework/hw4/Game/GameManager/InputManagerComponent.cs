@@ -20,7 +20,8 @@ namespace hw4.Game.GameManager
                 return;
             }
 
-            Context.PressedKeyInfo = args.KeyInfo;
+            Context.PressedConsoleKey = args.KeyInfo.Key;
+            Context.PressedKeyChar = args.KeyInfo.KeyChar;
         }
 
         public override void OnDestroy()
