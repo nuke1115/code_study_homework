@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace hw4.Game.Characters
 {
-    public struct CharacterComponentBundle
+    public class CharacterComponentBundle
     {
         public HPComponent HPComponent;
         public AttackerComponent attackerComponent;
