@@ -20,7 +20,7 @@ namespace hw4.Game.Characters
             _myInfo = ComponentOwner.GetComponent<ClassComponent>();
         }
 
-        public void Attack(HPComponent HPComponent, ClassComponent classComponent)
+        public void Attack(HPComponent HPComponent, ClassComponent classComponent, Action opponentCharacterDeathAction)
         {
             if(HPComponent.IsDead())
             {
@@ -44,6 +44,8 @@ namespace hw4.Game.Characters
                 {
                     Console.WriteLine($"{classComponent.Name}이 죽고, {_myInfo.Name}의 처치 횟수가 {_killCnt}로 올랐다");
                 }
+
+                characterDeathAction?.Invoke();
             }
         }
     }
