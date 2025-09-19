@@ -45,7 +45,7 @@ namespace hw4.Game.Characters
                     Console.WriteLine($"{classComponent.Name}이 죽고, {_myInfo.Name}의 처치 횟수가 {_killCnt}로 올랐다");
                 }
 
-                characterDeathAction?.Invoke();
+                opponentCharacterDeathAction?.Invoke();
             }
         }
     }
