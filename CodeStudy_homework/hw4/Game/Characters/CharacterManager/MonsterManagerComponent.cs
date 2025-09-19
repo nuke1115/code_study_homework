@@ -13,10 +13,8 @@ namespace hw4.Game.Characters.CharacterManager
             _opponentManager = ComponentOwner.GameObjectRequester.GetGameObject<GameObject>((int)eNames.UnitManager).GetComponent<MonsterManagerComponent>();
         }
 
-        public override void Init(int characterCnt)
+        public override void FillCharacters(int characterCnt)
         {
-            _characterList.Clear();
-
             for (int i = 0; i < characterCnt; i++)
             {
                 switch (_random.Next(0, 3))

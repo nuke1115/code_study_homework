@@ -24,6 +24,10 @@ namespace hw4.Game.DataStructure
 
         public void Clear()
         {
+            foreach (CharacterComponentBundle bundle in _list)
+            {
+                bundle.attackerComponent.ComponentOwner.Destroy();
+            }
             _list.Clear();
             _lastAliveIndex = -1;
         }

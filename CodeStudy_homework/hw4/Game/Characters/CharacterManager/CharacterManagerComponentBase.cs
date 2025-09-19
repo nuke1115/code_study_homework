@@ -53,7 +53,12 @@ namespace hw4.Game.Characters.CharacterManager
             _characterList.CondenseAliveCharacter(_lastPickedCharacterIndex);
         }
 
-        public abstract void Init(int characterCnt);
+        public abstract void FillCharacters(int characterCnt);
+
+        public void ClearCharacters()
+        {
+            _characterList.Clear();
+        }
 
         public override void OnDestroy()
         {
