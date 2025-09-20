@@ -10,9 +10,21 @@ namespace hw4.Game.Characters
         private int _attackCnt = 0;
         private ClassComponent _myInfo;
 
-        public int Strength { get; set; }
-        public int KillCnt { get; }
-        public int AttackCnt { get; }
+        public int Strength
+        {
+            get { return _strength; }
+            set { _strength = value; }
+        }
+
+        public int KillCnt
+        {
+            get { return _killCnt; }
+        }
+
+        public int AttackCnt
+        {
+            get { return _attackCnt; }
+        }
         public GameContext.GameContext GameContext { get;  set; }
 
         public override void Start()
