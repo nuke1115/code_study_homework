@@ -36,6 +36,7 @@ namespace hw4.Game.Characters.CharacterManager
         {
             if(GameContext.GameState == Game.GameContext.eGameStates.UNIT_TURN)
             {
+                GameContext.MoveToNextTurn();
                 var unit = _characterList[_random.Next(0, _characterList.GetAliveCount())];
                 var monster = _opponentManager.GetCharacter();
                 unit.attackerComponent.Attack(monster.HPComponent, monster.classComponent, _opponentManager.OnCharacterDeath);

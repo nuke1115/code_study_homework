@@ -65,5 +65,15 @@ namespace hw4.Game.Characters.CharacterManager
             ComponentOwner.UpdateEvent -= Update;
             _characterList.Clear();
         }
+
+        public void PrintCharacterStatus()
+        {
+            foreach (var character in _characterList)
+            {
+                Console.Write($"{character.classComponent.Name}({character.classComponent.Class}) : 체력({character.HPComponent.GetHP()}/");
+                Console.Write(character.HPComponent.IsDead() ? "사망" : "생존");
+                Console.WriteLine($" 처치 횟수 : ({character.attackerComponent.KillCnt})({character.attackerComponent.AttackCnt})");
+            }
+        }
     }
 }
