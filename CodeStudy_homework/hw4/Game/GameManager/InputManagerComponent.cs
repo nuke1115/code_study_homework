@@ -5,7 +5,7 @@ namespace hw4.Game.GameManager
 {
     public class InputManagerComponent : ComponentBehaviour
     {
-        public GameContext.GameContext Context { get; set; }
+        public GameContext.GameContext Context { get; set; } = new GameContext.GameContext();
 
         public override void Awake()
         {

@@ -57,7 +57,7 @@ namespace hw3
 
         public void Insert(int index, T value)
         {
-            if (index < 0 || index >= _count)
+            if (index < 0 || index > _count)
             {
                 throw new IndexOutOfRangeException("잘못된 인덱스에 접근");
             }

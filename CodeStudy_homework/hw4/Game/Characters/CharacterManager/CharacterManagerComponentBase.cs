@@ -13,10 +13,6 @@ namespace hw4.Game.Characters.CharacterManager
 
         private int _lastPickedCharacterIndex = -1;
         public GameContext.GameContext GameContext { get; set; }
-        public override void Awake()
-        {
-            ComponentOwner.UpdateEvent += Update;
-        }
 
         protected void AddCharacter(int strength,int hp, string className, string name)
         {
@@ -33,7 +29,7 @@ namespace hw4.Game.Characters.CharacterManager
             bundle.attackerComponent.GameContext = GameContext;
 
             bundle.HPComponent.SetHP(hp);
-
+            
             _characterList.AddAtLastAliveCharacter(bundle);
         }
 
@@ -62,10 +58,13 @@ namespace hw4.Game.Characters.CharacterManager
 
         public override void OnDestroy()
         {
-            ComponentOwner.UpdateEvent -= Update;
             _characterList.Clear();
         }
 
+        public int GetCharacterCnt()
+        {
+            return _characterList.GetCount();
+        }
         public void PrintCharacterStatus()
         {
             foreach (var character in _characterList)

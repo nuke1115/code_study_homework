@@ -10,6 +10,7 @@ namespace hw4.Game
     {
         MonsterManager = 1,
         UnitManager = 2,
-        InputManager = 3
+        InputManager = 3,
+        GameManager = 4
     }
 }

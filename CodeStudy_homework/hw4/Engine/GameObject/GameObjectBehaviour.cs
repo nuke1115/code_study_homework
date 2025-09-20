@@ -8,19 +8,33 @@ namespace hw4.Engine.GameObject
     public abstract class GameObjectBehaviour : IComponentable, ILifeCyclable
     {
         private MyArrayList<ComponentBehaviour> _components = new MyArrayList<ComponentBehaviour>(32);
+        private MyArrayList<ComponentBehaviour> _instantiatedComponents = new MyArrayList<ComponentBehaviour>(32);
         private bool _componentRemoveFlag = false;
         public bool IsDestroyed { get; set; }
         public int GameObjectNumber { get; set; } = 0;
-        private MyArrayList<LifeCycleAction> _startEvents = new MyArrayList<LifeCycleAction>(32);//이거 자료구조 더 안전한거로 바꿔. Start에서 객체 생성하면 씹힐 가능성 있음
-        public event LifeCycleAction UpdateEvent;
-        public event LifeCycleAction FixedUpdateEvent;
-        public event LifeCycleAction LateUpdateEvent;
+        private event LifeCycleAction UpdateEvent;
+        private event LifeCycleAction FixedUpdateEvent;
+        private event LifeCycleAction LateUpdateEvent;
 
         
         public IKeyEventPublisher KeyEventPublisher { get; set; }
         public IGameObjectRequestable GameObjectRequester { get; set; }
         public ITerminatable Terminator { get; set; }
 
+        private void RegisterInstantiatedObjects()
+        {
+            if (!_instantiatedComponents.IsEmpty())
+            {
+                foreach (var component in _instantiatedComponents)
+                {
+                    component.Start();
+                    UpdateEvent += component.Update;
+                    FixedUpdateEvent += component.FixedUpdate;
+                    LateUpdateEvent += component.LateUpdate;
+                }
+                _instantiatedComponents.Clear();
+            }
+        }
         
         public TComponentType AddComponent<TComponentType>() where TComponentType : ComponentBehaviour, new()
         {
@@ -29,7 +43,7 @@ namespace hw4.Engine.GameObject
                 throw new OutOfMemoryException("컴포넌트 최대 양 초과");
             }
 
-            if (_startEvents.IsFull() && !_startEvents.Resize(_startEvents.GetCount() * 2))
+            if (_instantiatedComponents.IsFull() && !_instantiatedComponents.Resize(_instantiatedComponents.GetCount() * 2))
             {
                 throw new OutOfMemoryException("컴포넌트 최대 양 초과");
             }
@@ -38,7 +52,7 @@ namespace hw4.Engine.GameObject
             component.ComponentOwner = this;
             component.Awake();
 
-            _startEvents.Add(component.Start);
+            _instantiatedComponents.Add(component);
 
             _components.Add(component);
             return component;
@@ -67,23 +81,18 @@ namespace hw4.Engine.GameObject
             _componentRemoveFlag = true;
         }
         //여기서 오브젝트의 컴포넌트 등록하기
-        public virtual void Awake() { }
+        public void Awake() { }
         public virtual void Start() { }
         public void Update()
         {
-            if(!_startEvents.IsEmpty())
-            {
-                foreach(var startFunc in _startEvents)
-                {
-                    startFunc.Invoke();
-                }
-                _startEvents.Clear();
-            }
+            RegisterInstantiatedObjects();
 
             UpdateEvent?.Invoke();
         }
         public void FixedUpdate()
         {
+            RegisterInstantiatedObjects();
+
             FixedUpdateEvent?.Invoke();
         }
         public void LateUpdate()

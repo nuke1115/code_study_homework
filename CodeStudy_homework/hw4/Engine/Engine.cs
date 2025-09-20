@@ -9,6 +9,7 @@ namespace hw4.Engine
     public class Engine : IKeyEventPublisher, IGameObjectRequestable, ITerminatable
     {
         private MyArrayList<GameObjectBehaviour> _gameObjects = new MyArrayList<GameObjectBehaviour>(32);//자동으로 늘리게
+        private MyArrayList<GameObjectBehaviour> _instantiatedObjects = new MyArrayList<GameObjectBehaviour>(32);
         private event KeyPressedDelegate _keyPressedEvent;
         private bool _isRunning = true;
         private bool _gameObjectRemoveFlag = false;
@@ -16,7 +17,6 @@ namespace hw4.Engine
         private double _fixedDeltaTimeInterval;
         private double _deltaTimeInterval;
 
-        private MyArrayList<LifeCycleAction> _startEventList = new MyArrayList<LifeCycleAction>(32);//이거 자료구조 더 안전한거로 바꿔. Start에서 객체 생성하면 씹힐 가능성 있음
         private event LifeCycleAction _updateEvent;
         private event LifeCycleAction _fixedUpdateEvent;
         private event LifeCycleAction _lateUpdateEvent;
@@ -42,17 +42,19 @@ namespace hw4.Engine
             {
                 watch.Restart();
 
-                if(!_startEventList.IsEmpty())
+                if (!_instantiatedObjects.IsFull())
                 {
-                    foreach(LifeCycleAction action in _startEventList)
+                    foreach (var obj in _instantiatedObjects)
                     {
-                        action.Invoke();
+                        obj.Start();
+                        _fixedUpdateEvent += obj.FixedUpdate;
+                        _updateEvent += obj.Update;
+                        _lateUpdateEvent += obj.LateUpdate;
                     }
-
-                    _startEventList.Clear();
+                    _instantiatedObjects.Clear();
                 }
 
-                if(Console.KeyAvailable)
+                if (Console.KeyAvailable)
                 {
                     _keyPressedEvent?.Invoke(new KeyEventArgs(Console.ReadKey(true)));
                 }
@@ -65,8 +67,10 @@ namespace hw4.Engine
 
                 if (deltaTime >= _deltaTimeInterval)
                 {
+                    
                     _updateEvent?.Invoke();
                     _lateUpdateEvent?.Invoke();
+                    //Console.WriteLine(1000 / deltaTime);
                     deltaTime = 0;
                 }
 
@@ -77,6 +81,8 @@ namespace hw4.Engine
                     _gameObjectRemoveFlag = false;
                     DestroyMarkedComponent();
                 }    
+
+                
 
                 double time = watch.Elapsed.TotalMilliseconds;
                 fixedDeltaTime += time;
@@ -105,16 +111,14 @@ namespace hw4.Engine
                 throw new OutOfMemoryException("객체 최대 양 초과");
             }
 
-            if(_startEventList.IsFull() && !_startEventList.Resize(_startEventList.GetCount()*2))
+            if(_instantiatedObjects.IsFull() && !_instantiatedObjects.Resize(_instantiatedObjects.GetCount()*2))
             {
                 throw new OutOfMemoryException("객체 최대 양 초과");
             }
 
             TGameObjectType obj = new TGameObjectType();
 
-            _fixedUpdateEvent += obj.FixedUpdate;
-            _updateEvent += obj.Update;
-            _lateUpdateEvent += obj.LateUpdate;
+            
             obj.KeyEventPublisher = this;
             obj.GameObjectRequester = this;
             obj.Terminator = this;
@@ -122,7 +126,7 @@ namespace hw4.Engine
             _gameObjects.Add(obj);
 
             obj.Awake();
-            _startEventList.Add(obj.Start);
+            _instantiatedObjects.Add(obj);
 
             return obj;
         }

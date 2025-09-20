@@ -31,6 +31,7 @@ namespace hw4.Game.Characters.CharacterManager
                         break;
                 }
             }
+            
         }
         public override void Update()
         {
@@ -40,6 +41,7 @@ namespace hw4.Game.Characters.CharacterManager
                 var unit = _characterList[_random.Next(0, _characterList.GetAliveCount())];
                 var monster = _opponentManager.GetCharacter();
                 unit.attackerComponent.Attack(monster.HPComponent, monster.classComponent, _opponentManager.OnCharacterDeath);
+                GameContext.GameState = Game.GameContext.eGameStates.MONSTER_TURN;
             }
         }
     }

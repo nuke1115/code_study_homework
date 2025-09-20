@@ -66,6 +66,10 @@ namespace hw4.Game.DataStructure
             _lastAliveIndex--;
         }
 
+        public void ClearCompletely()
+        {
+            
+        }
 
         public IEnumerator<CharacterComponentBundle> GetEnumerator()
         {

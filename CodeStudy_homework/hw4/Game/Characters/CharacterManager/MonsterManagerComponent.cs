@@ -10,7 +10,7 @@ namespace hw4.Game.Characters.CharacterManager
     {
         public override void Start()
         {
-            _opponentManager = ComponentOwner.GameObjectRequester.GetGameObject<GameObject>((int)eNames.UnitManager).GetComponent<MonsterManagerComponent>();
+            _opponentManager = ComponentOwner.GameObjectRequester.GetGameObject<GameObject>((int)eNames.UnitManager).GetComponent<UnitManagerComponent>();
         }
 
         public override void FillCharacters(int characterCnt)
@@ -38,6 +38,7 @@ namespace hw4.Game.Characters.CharacterManager
                 var monster = _characterList[_random.Next(0, _characterList.GetAliveCount())];
                 var unit = _opponentManager.GetCharacter();
                 monster.attackerComponent.Attack(unit.HPComponent, unit.classComponent, _opponentManager.OnCharacterDeath);
+                GameContext.GameState = Game.GameContext.eGameStates.UNIT_TURN;
             }
         }
     }
