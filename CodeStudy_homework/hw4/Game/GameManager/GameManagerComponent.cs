@@ -106,7 +106,7 @@ namespace hw4.Game.GameManager
                 //_ctx.GameState = GameContext.eGameStates.GAME_END;//게임 종료 상태 처리하는거 짜기
 
 
-                Console.WriteLine($"===== {_ctx.ElapsedGameCnt} 째 {_ctx.GameLoopCnt} 턴만에 게임 종료 =====");
+                Console.WriteLine($"===== {_ctx.ElapsedGameCnt} 째 게임이 {_ctx.GameLoopCnt} 턴만에 종료 =====");
                 Console.WriteLine("==========");
                 Console.WriteLine($"유닛 총 {_unitManager.GetCharacterCnt()}");
                 _unitManager.PrintCharacterStatus();
@@ -119,7 +119,7 @@ namespace hw4.Game.GameManager
 
             }
 
-            
+            _selectedKey = 0;
 
         }
 

@@ -400,8 +400,25 @@ GO에서 Awake, Start만 virtual로 열어둔 이유:Awake, Start에서 어떤 �
  */
 
 
+public class TestOOOO
+{
+
+}
+
+
 public class Program
 {
+    public static bool Test1()
+    {
+        Console.WriteLine("1");
+        return true;
+    }
+
+    public static bool Test2()
+    {
+        Console.WriteLine("2");
+        return true;
+    }
     public static void Main()
     {
         Program p = new Program();

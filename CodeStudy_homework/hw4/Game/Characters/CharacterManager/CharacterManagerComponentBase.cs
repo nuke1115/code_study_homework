@@ -69,9 +69,9 @@ namespace hw4.Game.Characters.CharacterManager
         {
             foreach (var character in _characterList)
             {
-                Console.Write($"{character.classComponent.Name}({character.classComponent.Class}) : 체력({character.HPComponent.GetHP()}/");
-                Console.Write(character.HPComponent.IsDead() ? "사망" : "생존");
-                Console.WriteLine($" 처치 횟수 : ({character.attackerComponent.KillCnt})({character.attackerComponent.AttackCnt})");
+                Console.Write($"{character.classComponent.Name}({character.classComponent.Class}) : 체력({character.HPComponent.GetHP()})");
+                Console.Write("생존 여부({0})",character.HPComponent.IsDead() ? "사망" : "생존");
+                Console.WriteLine($" 처치 횟수({character.attackerComponent.KillCnt}) 공격횟수({character.attackerComponent.AttackCnt})");
             }
         }
     }

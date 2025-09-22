@@ -33,7 +33,7 @@ namespace hw4.Game.Characters.CharacterManager
         }
         public override void Update()
         {
-            if (GameContext.GameState == Game.GameContext.eGameStates.MONSTER_TURN)
+            if (GameContext.GameState == Game.GameContext.eGameStates.MONSTER_TURN && !_opponentManager.IsAllDead())
             {
                 var monster = _characterList[_random.Next(0, _characterList.GetAliveCount())];
                 var unit = _opponentManager.GetCharacter();
