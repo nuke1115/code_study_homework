@@ -2,6 +2,7 @@
 using hw4.Engine.Component;
 using hw4.Engine.Core;
 using hw4.Engine.Core.KeyEvent;
+using System.ComponentModel;
 
 namespace hw4.Engine.GameObject
 {
@@ -25,12 +26,12 @@ namespace hw4.Engine.GameObject
         {
             if (!_instantiatedComponents.IsEmpty())
             {
-                foreach (var component in _instantiatedComponents)
+                for(int i = 0, objCnt = _instantiatedComponents.GetCount(); i < objCnt; i++)
                 {
-                    component.Start();
-                    UpdateEvent += component.Update;
-                    FixedUpdateEvent += component.FixedUpdate;
-                    LateUpdateEvent += component.LateUpdate;
+                    _instantiatedComponents[i].Start();
+                    UpdateEvent += _instantiatedComponents[i].Update;
+                    FixedUpdateEvent += _instantiatedComponents[i].FixedUpdate;
+                    LateUpdateEvent += _instantiatedComponents[i].LateUpdate;
                 }
                 _instantiatedComponents.Clear();
             }
@@ -60,11 +61,11 @@ namespace hw4.Engine.GameObject
 
         public TComponentType GetComponent<TComponentType>() where TComponentType : ComponentBehaviour
         {
-            foreach (var component in _components)
+            for(int i = 0, objCnt = _components.GetCount(); i < objCnt; i++)
             {
-                if(!component.IsDestroyed && component is TComponentType)
+                if (!_components[i].IsDestroyed && _components[i] is TComponentType)
                 {
-                    return (TComponentType)component;
+                    return (TComponentType)_components[i];
                 }
             }
             return default(TComponentType);
@@ -107,9 +108,9 @@ namespace hw4.Engine.GameObject
         }
         public void OnDestroy()
         {
-            foreach(var component in _components)
+            for(int i = 0, objCnt = _components.GetCount(); i < objCnt; i++)
             {
-                component.OnDestroy();
+                _components[i].Destroy();
             }
             _components.Clear();
         }

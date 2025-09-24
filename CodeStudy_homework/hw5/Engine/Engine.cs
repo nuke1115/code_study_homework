@@ -44,12 +44,12 @@ namespace hw4.Engine
 
                 if (!_instantiatedObjects.IsFull())
                 {
-                    foreach (var obj in _instantiatedObjects)
+                    for(int i = 0, objcnt = _instantiatedObjects.GetCount(); i<objcnt; i++)
                     {
-                        obj.Start();
-                        _fixedUpdateEvent += obj.FixedUpdate;
-                        _updateEvent += obj.Update;
-                        _lateUpdateEvent += obj.LateUpdate;
+                        _instantiatedObjects[i].Start();
+                        _fixedUpdateEvent += _instantiatedObjects[i].FixedUpdate;
+                        _updateEvent += _instantiatedObjects[i].Update;
+                        _lateUpdateEvent += _instantiatedObjects[i].LateUpdate;
                     }
                     _instantiatedObjects.Clear();
                 }
@@ -133,11 +133,11 @@ namespace hw4.Engine
 
         public TGameObjectType GetGameObject<TGameObjectType>(int objectNumber) where TGameObjectType : GameObjectBehaviour
         {
-            foreach(var gameObject in _gameObjects)
+            for(int i = 0, objCnt = _gameObjects.GetCount(); i < objCnt; i++)
             {
-                if(gameObject.GameObjectNumber == objectNumber && gameObject is TGameObjectType)
+                if (_gameObjects[i].GameObjectNumber == objectNumber && _gameObjects[i] is TGameObjectType)
                 {
-                    return (TGameObjectType)gameObject;
+                    return (TGameObjectType)(_gameObjects[i]);
                 }
             }
 
