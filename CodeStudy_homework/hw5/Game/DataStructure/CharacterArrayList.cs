@@ -22,11 +22,6 @@ namespace hw4.Game.DataStructure
             }
         }
 
-        public void Clear()
-        {
-            _list.Clear();
-            _lastAliveIndex = -1;
-        }
 
         public int GetAliveCount()
         {
@@ -62,6 +57,11 @@ namespace hw4.Game.DataStructure
             _lastAliveIndex--;
         }
 
+        public void ClearWithoutDestroy()
+        {
+            _lastAliveIndex = -1;
+            _list.Clear();
+        }
         public IEnumerator<CharacterComponentBundle> GetEnumerator()
         {
             return  _list.GetEnumerator();
