@@ -1,5 +1,6 @@
 ﻿using hw4.Engine.Component;
 using hw4.Game.DataStructure;
+using hw5.Game.DataStructure;
 
 namespace hw4.Game.Characters.CharacterManager
 {
@@ -8,20 +9,22 @@ namespace hw4.Game.Characters.CharacterManager
         protected CharacterArrayList _characterList = new CharacterArrayList(16);
 
         protected CharacterManagerComponentBase _opponentManager;
+
+        private CharacterObjectPool _characterPool;
         
         protected Random _random = new Random();
 
         private int _lastPickedCharacterIndex = -1;
         public GameContext.GameContext GameContext { get; set; }
 
+        public override void Awake()
+        {
+            _characterPool = new CharacterObjectPool(64, ComponentOwner.GameObjectRequester, true);
+        }
+
         protected void AddCharacter(int strength,int hp, string className, string name)
         {
-            var Character = ComponentOwner.GameObjectRequester.Instantiate<GameObject>();
-            CharacterComponentBundle bundle = new CharacterComponentBundle();
-            bundle.attackerComponent = Character.AddComponent<AttackerComponent>();
-            bundle.HPComponent = Character.AddComponent<HPComponent>();
-            bundle.classComponent = Character.AddComponent<ClassComponent>();
-
+            CharacterComponentBundle bundle = _characterPool.GetFromPool();
             bundle.classComponent.Name = name;
             bundle.classComponent.Class = className;
 
@@ -53,12 +56,20 @@ namespace hw4.Game.Characters.CharacterManager
 
         public void ClearCharacters()
         {
-            _characterList.Clear();
+            for(int i = 0, objCnt = _characterList.GetCount(); i < objCnt; i++)
+            {
+                _characterPool.ReturnToPool(_characterList[i]);
+            }
+            _characterList.ClearWithoutDestroy();
         }
 
         public override void OnDestroy()
         {
-            _characterList.Clear();
+            foreach(var character in _characterList)
+            {
+                _characterPool.ReturnToPool(character);
+            }
+            _characterPool.ClearPool();
         }
 
         public int GetCharacterCnt()

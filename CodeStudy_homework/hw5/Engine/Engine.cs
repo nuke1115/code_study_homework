@@ -70,7 +70,7 @@ namespace hw4.Engine
                     
                     _updateEvent?.Invoke();
                     _lateUpdateEvent?.Invoke();
-                    //Console.WriteLine(1000 / deltaTime);
+                    Console.WriteLine(1000 / deltaTime);
                     deltaTime = 0;
                 }
 
