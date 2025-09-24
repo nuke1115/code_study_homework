@@ -118,6 +118,10 @@ namespace hw3
             return _count == _maxCount;
         }
 
+        public int GetCapacity()
+        {
+            return _maxCount;
+        }
         private int MoveToNextIndex(int index)
         {
             return (index + 1) % _maxCount;
