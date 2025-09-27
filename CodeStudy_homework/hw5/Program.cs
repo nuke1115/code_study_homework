@@ -434,20 +434,7 @@ public class Program
     public void RunCodeGen()
     {
         CodeGenerator codeGenerator = new CodeGenerator();
-        codeGenerator.ReadFromFile(@"C:\Users\최혜정\Desktop\fuck\fmt.txt");
 
-        codeGenerator.ReplaceWith("__CODE_GEN_FMT_NAME__", "TestClassGenerated");
-        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_USING_SECTION__", "using System;\nusing System.Collections.Generic;");
-        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_FUNCTION_SECTION__", 
-            @"
-    public void SayHello()
-    {
-        Console.WriteLine(""Hello, world!"");
-    }
-");
-        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_VAR_SECTION__", "");
-        Console.WriteLine(codeGenerator.GetString());
-        Console.WriteLine(codeGenerator.WriteToFile(@"D:\VSWorkstation\code_study_homework\CodeStudy_homework\hw5\", "TestClassGenerated.cs"));
     }
 
     public void RunGame()
