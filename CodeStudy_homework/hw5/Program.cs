@@ -16,6 +16,7 @@ using hw4.Game;
 using hw4.Game.GameManager;
 using hw4.Game.Characters.CharacterManager;
 using hw4.Game.Characters;
+using hw5;
 
 /*
 
@@ -422,10 +423,34 @@ public class Program
     public static void Main()
     {
         Program p = new Program();
-        p.Run();
+        
+        int sel = int.Parse(Console.ReadLine());
+
+        if (sel == 1) p.RunGame();
+        else if(sel == 2) p.RunCodeGen();
+        
     }
 
-    public void Run()
+    public void RunCodeGen()
+    {
+        CodeGenerator codeGenerator = new CodeGenerator();
+        codeGenerator.ReadFromFile(@"C:\Users\최혜정\Desktop\fuck\fmt.txt");
+
+        codeGenerator.ReplaceWith("__CODE_GEN_FMT_NAME__", "TestClassGenerated");
+        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_USING_SECTION__", "using System;\nusing System.Collections.Generic;");
+        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_FUNCTION_SECTION__", 
+            @"
+    public void SayHello()
+    {
+        Console.WriteLine(""Hello, world!"");
+    }
+");
+        codeGenerator.ReplaceWith("//__CODE_GEN_FMT_VAR_SECTION__", "");
+        Console.WriteLine(codeGenerator.GetString());
+        Console.WriteLine(codeGenerator.WriteToFile(@"D:\VSWorkstation\code_study_homework\CodeStudy_homework\hw5\", "TestClassGenerated.cs"));
+    }
+
+    public void RunGame()
     {
         Engine engine = new Engine(240);
         GameObject go = engine.Instantiate<GameObject>();
