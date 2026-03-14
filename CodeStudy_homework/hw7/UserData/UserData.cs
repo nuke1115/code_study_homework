@@ -9,7 +9,6 @@ namespace hw7_server.UserData
     {
         private Vector2Int _pos;
         private NetworkStream _stream;
-        private BinaryWriter _writer;
         private int _id = -1;
         private char _character;
 
@@ -18,7 +17,6 @@ namespace hw7_server.UserData
             _id = id;
             _pos = new Vector2Int(5, 5);
             _stream = stream;
-            _writer = new BinaryWriter(stream);
             _character = character;
         }
 
@@ -55,7 +53,7 @@ namespace hw7_server.UserData
 
         public void Release()
         {
-            _writer.Close();
+            _stream.Close();
         }
 
         public void WriteMessage(ReadOnlySpan<byte> span)

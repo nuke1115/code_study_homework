@@ -2,55 +2,126 @@
 using hw7_server;
 using hw7_server.Server.Packet;
 using hw7_server.UserData;
-using System;
 using System.Collections.Concurrent;
-using System.IO;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection.PortableExecutable;
-using System.Xml.Linq;
 
 namespace SimpleTcpServer
 {
 
     class Program
     {
-        public ConcurrentQueue<(int id, Protocol protocol)> _requestQueue = new ConcurrentQueue<(int id, Protocol protocol)>();
-        public event Action<ReadOnlySpan<byte>> WriteBroadcastEvent;
-        private ConcurrentDictionary<int, UserData> _userData = new ConcurrentDictionary<int, UserData>();
-        private TcpListener _server;
-        private Vector2Int _borderMax = new Vector2Int(50,31); 
-        private Vector2Int _borderMin = new Vector2Int(0,0); 
 
+        private bool [,]_map = new bool[50, 31];
+        public ConcurrentQueue<(int id, Protocol protocol)> _requestQueue = new ConcurrentQueue<(int id, Protocol protocol)>();
+        //public event Action<ReadOnlySpan<byte>> WriteBroadcastEvent;
+        private ConcurrentDictionary<int, UserData> _userData = new ConcurrentDictionary<int, UserData>();
+        private TcpListener? _server;
+        private Vector2Int _borderMax = new Vector2Int(50,31); 
+        private Vector2Int _borderMin = new Vector2Int(0,0);
+
+        private CancellationTokenSource _cts;
+        private CancellationToken _token;
+        private ushort _port;
         
+        Program()
+        {
+
+            while(true)
+            {
+                Console.Write("포트 입력>>");
+                if(ushort.TryParse(Console.ReadLine(), out _port))
+                {
+                    break;
+                }
+            }
+
+            _cts = new CancellationTokenSource();
+            _token = _cts.Token;
+        }
+
         static void Main(string[] args)
         {
-            Task.Run(()=>new Program().StartServer()).Wait();
+
+            var p =new Program();
+            
+            var t = Task.Run(p.StartServer);
+            p.StartKey();
+            t.Wait();
+
+            Console.WriteLine("서버 종료");
+            Console.ReadKey(true);
+        }
+
+        public void StartKey()
+        {
+            byte[] buffer = new byte[512];
+            while (_token.IsCancellationRequested == false)
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true);
+                    //await Task.Delay(1);
+                    Vector2Int pos = new Vector2Int(0, 0);
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.Escape:
+                            _cts.Cancel();
+                            foreach (var u in _userData.Values)
+                            {
+                                u.Release();
+                            }
+
+                            if(_server is not null)
+                            {
+                                _server.Stop();
+                            }
+                            return;
+                        default:
+                            continue;
+                    }
+                }
+            }
         }
 
         public async Task StartServer()
         {
-            _server = new TcpListener(IPAddress.Any, 7777);
+            _server = new TcpListener(IPAddress.Any, _port);
             _server.Start();
             Thread t = new Thread(ExecuteQueue);
             t.Start();
-            Console.WriteLine("[서버] 시작되었습니다. 클라이언트의 접속을 기다립니다...");
+            Console.WriteLine($"[서버] {_port}포트에서 클라이언트 접속 대기중...");
 
 
 
-            while(true)
+            try
             {
-                TcpClient client = await _server.AcceptTcpClientAsync();
-                _ = HandleAsync(client);
+                while (_token.IsCancellationRequested == false)
+                {
+                    TcpClient client = await _server.AcceptTcpClientAsync(_token);
+                    _ = HandleAsync(client);
+                }
             }
+            catch(Exception)
+            {
+
+            }
+            finally
+            {
+                t.Join();
+            }
+
         }
 
         public void ExecuteQueue()
         {
-            UserData data;
+            UserData? data;
             Span<byte> buffer = stackalloc byte[512];
-            while(true)
+            int offset;
+            while(_token.IsCancellationRequested == false)
             {
+                offset = 0;
                 if(_requestQueue.TryDequeue(out var req) == false)
                 {
                     continue;
@@ -65,26 +136,26 @@ namespace SimpleTcpServer
                             continue;
                         }
 
-                        int offset = 0;
+                        int packetOffset=0;
+                        Span<byte> loginPackage = buffer.Slice(packetOffset, (int)PacketPayloadSize.LOGIN + 4);
+                        packetOffset += loginPackage.Length;
+                        Span<byte> loginPackageToNew = buffer.Slice(packetOffset, (int)PacketPayloadSize.SET + 4);
 
-                        Span<byte> loginPackage = buffer.Slice(offset,(int)PacketPayloadSize.LOGIN + 4);
-                        offset += loginPackage.Length;
-                        Span<byte> loginPackageToNew = buffer.Slice(offset, (int)PacketPayloadSize.SET + 4);
+                        ByteWriter.WriteUShort(loginPackage.Slice(offset,2),(ushort)loginPackage.Length, ref offset);
+                        ByteWriter.WriteUShort(loginPackage.Slice(offset, 2),(ushort)Protocol.LOGIN, ref offset);
+                        ByteWriter.WriteInt(loginPackage.Slice(offset, 4),data.GetID(), ref offset);
+                        ByteWriter.WriteUShort(loginPackage.Slice(offset,2),data.GetCharacter(), ref offset);
 
-                        ByteWriter.WriteUShort(loginPackage.Slice(0,2),(ushort)loginPackage.Length);
-                        ByteWriter.WriteUShort(loginPackage.Slice(2,2),(ushort)Protocol.LOGIN);
-                        ByteWriter.WriteInt(loginPackage.Slice(4,4),data.GetID());
-                        ByteWriter.WriteUShort(loginPackage.Slice(8,2),data.GetCharacter());
 
                         foreach(var user in _userData.Values)
                         {
-                            
-                            ByteWriter.WriteUShort(loginPackageToNew.Slice(0, 2), (ushort)loginPackageToNew.Length);
-                            ByteWriter.WriteUShort(loginPackageToNew.Slice(2, 2), (ushort)Protocol.SET);
-                            ByteWriter.WriteInt(loginPackageToNew.Slice(4, 4), user.GetPos().X);
-                            ByteWriter.WriteInt(loginPackageToNew.Slice(8, 4), user.GetPos().Y);
-                            ByteWriter.WriteInt(loginPackageToNew.Slice(12, 4), user.GetID());
-                            ByteWriter.WriteUShort(loginPackageToNew.Slice(16, 2), user.GetCharacter());
+                            offset = 0;
+                            ByteWriter.WriteUShort(loginPackageToNew.Slice(offset, 2), (ushort)loginPackageToNew.Length, ref offset);
+                            ByteWriter.WriteUShort(loginPackageToNew.Slice(offset, 2), (ushort)Protocol.SET, ref offset);
+                            ByteWriter.WriteInt(loginPackageToNew.Slice(offset, 4), user.GetPos().X, ref offset);
+                            ByteWriter.WriteInt(loginPackageToNew.Slice(offset, 4), user.GetPos().Y, ref offset);
+                            ByteWriter.WriteInt(loginPackageToNew.Slice(offset, 4), user.GetID(), ref offset);
+                            ByteWriter.WriteUShort(loginPackageToNew.Slice(offset, 2), user.GetCharacter(), ref offset);
                             if(user.GetID() != req.id)
                             {
                                 user.WriteMessage(loginPackage);
@@ -100,18 +171,16 @@ namespace SimpleTcpServer
 
                         Span<byte> logoutPackage = buffer.Slice(0, (int)PacketPayloadSize.LOGOUT + 4);
 
-                        ByteWriter.WriteUShort(logoutPackage.Slice(0, 2), (ushort)logoutPackage.Length);
-                        ByteWriter.WriteUShort(logoutPackage.Slice(2, 2), (ushort)Protocol.LOGOUT);
-                        ByteWriter.WriteInt(logoutPackage.Slice(4, 4), data.GetID());
+                        ByteWriter.WriteUShort(logoutPackage.Slice(offset, 2), (ushort)logoutPackage.Length, ref offset);
+                        ByteWriter.WriteUShort(logoutPackage.Slice(offset, 2), (ushort)Protocol.LOGOUT, ref offset);
+                        ByteWriter.WriteInt(logoutPackage.Slice(offset, 4), data.GetID(), ref offset);
 
                         foreach (var user in _userData.Values)
                         {
-                            Console.WriteLine("지워짐");
                             user.WriteMessage(logoutPackage);
                         }
                         data.Release();
 
-                        Console.WriteLine("func");
 
 
                         break;
@@ -122,19 +191,16 @@ namespace SimpleTcpServer
                         }
 
                         Span<byte> movePackage = buffer.Slice(0, (int)PacketPayloadSize.MOVE + 4);
-                        ByteWriter.WriteUShort(movePackage.Slice(0, 2), (ushort)movePackage.Length);
-                        ByteWriter.WriteUShort(movePackage.Slice(2, 2), (ushort)Protocol.MOVE);
-                        ByteWriter.WriteInt(movePackage.Slice(4, 4), data.GetPos().X);
-                        ByteWriter.WriteInt(movePackage.Slice(8, 4), data.GetPos().Y);
-                        ByteWriter.WriteInt(movePackage.Slice(12, 4), data.GetID());
+                        ByteWriter.WriteUShort(movePackage.Slice(offset, 2), (ushort)movePackage.Length, ref offset);
+                        ByteWriter.WriteUShort(movePackage.Slice(offset, 2), (ushort)Protocol.MOVE, ref offset);
+                        ByteWriter.WriteInt(movePackage.Slice(offset, 4), data.GetPos().X, ref offset);
+                        ByteWriter.WriteInt(movePackage.Slice(offset, 4), data.GetPos().Y, ref offset);
+                        ByteWriter.WriteInt(movePackage.Slice(offset, 4), data.GetID(), ref offset);
 
                         foreach (var user in _userData.Values)
                         {
-                            Console.WriteLine("발신됨");
                             user.WriteMessage(movePackage);
                         }
-
-                        Console.WriteLine($"{_userData.Values.Count}수신됨");
 
                         break;
                 }
@@ -143,16 +209,17 @@ namespace SimpleTcpServer
 
         public async Task HandleAsync(TcpClient client)
         {
-            UserData myData = null;
+            UserData? myData = null;
             using NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[512];
             bool isRunning = false;
+            int id = -1;
             try
             {
                 ushort packetSize = 0;
                 Protocol protocol = 0;
                 int payloadSize = 0;
-                if (await ReadBufferAsync(stream, buffer, 4))
+                if (await StreamUtils.ReadBufferAsync(stream, buffer, 4,_token))
                 {
                     packetSize = BitConverter.ToUInt16(buffer, 0);
                     protocol = (Protocol)BitConverter.ToUInt16(buffer, 2);
@@ -160,37 +227,46 @@ namespace SimpleTcpServer
                     Console.WriteLine($"{packetSize} {protocol} {payloadSize}");
                 }
 
-                if(payloadSize == (int)PacketPayloadSize.LOGIN && protocol == Protocol.LOGIN)
+                if((payloadSize == (int)PacketPayloadSize.LOGIN && protocol == Protocol.LOGIN) &&
+                    await StreamUtils.ReadBufferWithProtocol(stream, buffer, payloadSize, PacketPayloadSize.LOGIN,_token) == false)
                 {
-
-                    if(ReadBufferWithProtocol(stream, buffer, payloadSize, PacketPayloadSize.LOGIN))
-                    {
-                        myData = new UserData(
-                            BitConverter.ToInt32(buffer,0),
-                            BitConverter.ToChar(buffer,4),
-                            stream
-                            );
-                        Console.WriteLine($"{myData.GetCharacter()} {myData.GetID()}");
-
-                        if(myData is not null)
-                        {
-                            isRunning = true;
-                            _userData[myData.GetID()] = myData;
-                            _requestQueue.Enqueue((myData.GetID(), Protocol.LOGIN));
-                            Console.WriteLine($"[접속] : {myData.GetID()}");
-                        }
-                    }
+                    return;
                 }
 
-                while (isRunning)
+                myData = new UserData(BitConverter.ToInt32(buffer, 0), BitConverter.ToChar(buffer, 4), stream);
+
+                if (myData is null)
                 {
-                    if(await ReadBufferAsync(stream,buffer,4) == false)
+                    return;
+                }
+
+                isRunning = true;
+                _userData[myData.GetID()] = myData;
+                _requestQueue.Enqueue((myData.GetID(), Protocol.LOGIN));
+                Console.WriteLine($"[접속] : {myData.GetID()}");
+                id = myData.GetID();
+
+
+
+
+                //int cnt = 0;
+                //int banCnt = 0;
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
+
+
+                while (isRunning && _token.IsCancellationRequested == false)
+                {
+                    if(await StreamUtils.ReadBufferAsync(stream, buffer, 4, _token) == false)
                     {
                         Console.WriteLine("asdfasdf");
                         break;
                     }
 
-                    Console.WriteLine(stream.CanRead.ToString());
+                    double time = sw.Elapsed.TotalMilliseconds;
+                    sw.Restart();
+                    
 
                     // 1. 패킷 전체 크기 읽기 (2바이트)
                     packetSize = BitConverter.ToUInt16(buffer, 0);
@@ -204,7 +280,7 @@ namespace SimpleTcpServer
                     switch (protocol)
                     {
                         case Protocol.MOVE:
-                            if(ReadBufferWithProtocol(stream,buffer,payloadSize,PacketPayloadSize.MOVE) == false)
+                            if(await StreamUtils.ReadBufferWithProtocol(stream, buffer, payloadSize, PacketPayloadSize.MOVE, _token) == false)
                             {
                                 Console.WriteLine("서버와의 연결이 원활하지 않습니다.");
                                 isRunning = false;
@@ -221,13 +297,17 @@ namespace SimpleTcpServer
                             _requestQueue.Enqueue((myData.GetID(), Protocol.MOVE));
 
                             break;
+                        case Protocol.SHOOT:
+                            break;
                         default:
-                            await DisposePacket(payloadSize, stream,buffer);
+                            await StreamUtils.DisposePacket(payloadSize, stream,buffer,_token);
                             isRunning = false;
                             break;
                     }
                 }
             }
+            catch (OperationCanceledException)
+            { }
             catch (Exception ex)
             {
                 Console.WriteLine($"[오류] : {ex.Message}");
@@ -239,68 +319,12 @@ namespace SimpleTcpServer
                 {
                     
                     _requestQueue.Enqueue((myData.GetID(),Protocol.LOGOUT));
-                    WriteBroadcastEvent -= myData.WriteMessage;
+                    //WriteBroadcastEvent -= myData.WriteMessage;
                 }
                 
             }
 
-            Console.WriteLine("연결종료");
-        }
-
-
-        public bool ReadBufferWithProtocol(NetworkStream stream, byte[] buffer, int payloadSize, PacketPayloadSize packetSize)
-        {
-            if (payloadSize != (int)packetSize)
-            {
-                DisposePacket(payloadSize, stream, buffer).Wait();
-                return false;
-            }
-            
-            if (ReadBufferAsync(stream, buffer, payloadSize).Result == false)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task<bool> ReadBufferAsync(NetworkStream stream, byte[] buffer, int payloadSize)
-        {
-            int siz = 0;
-
-            try
-            {
-                while (siz < payloadSize && stream.CanRead )
-                {
-                    int read = await stream.ReadAsync(buffer, siz, payloadSize - siz);
-                    if (read == 0)
-                    {
-                        return false;
-                    }
-                    siz += read;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"오류 : {e.Message}");
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task DisposePacket(int payloadSize, NetworkStream reader, byte[] buffer)
-        {
-
-            // 남은 쓰레기 데이터를 읽어서 버림 (스트림 싱크 유지)
-            while (payloadSize > 0 && reader.CanRead)
-            {
-                int read = await reader.ReadAsync(buffer, 0, Math.Min(512, payloadSize));
-                payloadSize -= read;
-            }
-
-            Console.WriteLine($"       -> {payloadSize} bytes의 알 수 없는 데이터를 안전하게 무시했습니다.");
-
+            Console.WriteLine($"{id} : 연결종료");
         }
     }
 }

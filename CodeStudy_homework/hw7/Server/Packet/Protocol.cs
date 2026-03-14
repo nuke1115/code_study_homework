@@ -9,6 +9,7 @@ namespace hw7.Server.Packet
         MOVE=1,
         LOGIN=3,
         LOGOUT=7,
-        SET=8
+        SET=8,
+        SHOOT=9
     }
 }
